@@ -2,7 +2,7 @@
 
 namespace BetFootballLeague.Domain.Entities
 {
-    public class Match : BaseEntity
+    public class LeagueMatch : BaseEntity
     {
         public Guid? GroupId { get; set; }
         public Guid RoundId { get; set; }
@@ -18,5 +18,9 @@ namespace BetFootballLeague.Domain.Entities
         public int? Team2Score { get; set; }
         public Guid? WinBetTeamId { get; set; }
         public MatchBetStatusEnum BetStatus { get; set; } = MatchBetStatusEnum.NOT_ALLOWED;
+
+        public Round Round { get; set; }
+        public Team Team1 { get; set; }
+        public Team Team2 { get; set; }
     }
 }

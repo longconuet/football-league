@@ -10,5 +10,7 @@ namespace BetFootballLeague.Domain.Entities
         public RoleEnum Role { get; set; } = RoleEnum.NORMAL_USER;
         public UserStatusEnum Status { get; set; } = UserStatusEnum.Active;
         public int Point { get; set; } = 0;
+
+        public ICollection<UserBet> UserBets { get; set; }
     }
 }
