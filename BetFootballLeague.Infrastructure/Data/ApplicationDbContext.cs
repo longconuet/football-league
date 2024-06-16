@@ -8,6 +8,8 @@ namespace BetFootballLeague.Infrastructure.Data
     {
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base (options) { }
 
+        public ApplicationDbContext() { }
+
         public DbSet<User> Users { get; set; }
         public DbSet<UserBet> UserBets { get; set; }
         public DbSet<LeagueGroup> Groups { get; set; }
@@ -36,7 +38,9 @@ namespace BetFootballLeague.Infrastructure.Data
 
             modelBuilder.ApplyConfiguration(new Group_FluentConfiguration());
             modelBuilder.ApplyConfiguration(new Round_FluentConfiguration());
-            modelBuilder.ApplyConfiguration(new Team_FluentConfiguration());
+            modelBuilder.ApplyConfiguration(new Match_FluentConfiguration());
+
+            base.OnModelCreating(modelBuilder);
         }
     }
 }

@@ -1,0 +1,47 @@
+﻿@using BetFootballLeague.Application.DTOs
+@model IEnumerable<UserDto>
+
+@{
+    ViewData["Title"] = "Home Page";
+}
+
+<div>
+    <h1>Users List</h1>
+    <div class="row mb-3 mt-5">
+        <div class="col-auto text-right">
+            <a class="btn btn-success" asp-action="UserCreate">
+                <i class="bi bi-plus-lg"></i> Create New User
+            </a>
+        </div>
+    </div>
+    <div>
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th scope="col">Name</th>
+                    <th scope="col">Phone</th>
+                    <th scope="col">Email</th>
+                    <th scope="col">Role</th>
+                    <th scope="col">Status</th>
+                    <th scope="col" class="text-center">Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var user in Model)
+                {
+                    <tr>
+                        <td>@user.FullName</td>
+                        <td>@user.Phone</td>
+                        <td>@user.Email</td>
+                        <td>@user.Role</td>
+                        <td>@user.Status</td>
+                        <td class="text-center">
+                            <a asp-action="UserUpdate" asp-route-userId="@user.Id" class="btn btn-info" title="Edit"><i class="bi bi-pencil-square"></i></a>
+                            <a asp-action="UserDelete" asp-route-userId="@user.Id" class="btn btn-danger" title="Delete"><i class="bi bi-trash3"></i></a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
