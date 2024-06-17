@@ -17,12 +17,10 @@ builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<UserService>();
 
 builder.Services.AddControllersWithViews(options =>
-{
-    options.Filters.Add(new AutoValidateAntiforgeryTokenAttribute());
-});
-
-builder.Services.AddControllersWithViews()
-     .AddRazorRuntimeCompilation();
+    {
+        options.Filters.Add(new AutoValidateAntiforgeryTokenAttribute());
+    })
+    .AddRazorRuntimeCompilation();
 
 var app = builder.Build();
 

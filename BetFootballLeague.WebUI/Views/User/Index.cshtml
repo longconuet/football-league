@@ -181,22 +181,25 @@
         }
 
         function submitCreateUser() {
-            var data = JSON.stringify({
+            var data = {
                 FullName: $('#name').val(),
                 Phone: $('#phone').val(),
                 Email: $('#email').val(),
                 Role: $('#role').val(),
                 Status: $('#status').is(':checked') ? 1 : 0
-            });
+            };
 
             $.ajax({
-                type: "POST",
                 url: '/User/CreateUserAjax',
-                contentType: 'application/json',
+                data: JSON.stringify(data),
+                type: "POST",
+                contentType: "application/json;charset=utf-8",
+                dataType: "json",
+                async: true,
+                processData: false,
                 headers: {
                     'RequestVerificationToken': $('input[name="__RequestVerificationToken"]').val(), // Thêm token vào header
-                },
-                data: data,
+                },                
                 success: function (response) {
                     if (response.status == 0) {
                         toastr.error('Error', response.message);
