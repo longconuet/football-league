@@ -1,17 +1,14 @@
-﻿@using BetFootballLeague.Application.DTOs
-@model IEnumerable<UserDto>
-
-@{
-    ViewData["Title"] = "Home Page";
+﻿@{
+    ViewData["Title"] = "User Page";
 }
 
 <div>
     <h1>Users List</h1>
     <div class="row mb-3 mt-5">
         <div class="col-auto text-right">
-            <a class="btn btn-success" asp-action="UserCreate">
+            <button type="button" class="btn btn-success" onclick="showCreateModal()">
                 <i class="bi bi-plus-lg"></i> Create New User
-            </a>
+            </button>
         </div>
     </div>
     <div>
@@ -26,22 +23,220 @@
                     <th scope="col" class="text-center">Action</th>
                 </tr>
             </thead>
-            <tbody>
-                @foreach (var user in Model)
-                {
-                    <tr>
-                        <td>@user.FullName</td>
-                        <td>@user.Phone</td>
-                        <td>@user.Email</td>
-                        <td>@user.Role</td>
-                        <td>@user.Status</td>
-                        <td class="text-center">
-                            <a asp-action="UserUpdate" asp-route-userId="@user.Id" class="btn btn-info" title="Edit"><i class="bi bi-pencil-square"></i></a>
-                            <a asp-action="UserDelete" asp-route-userId="@user.Id" class="btn btn-danger" title="Delete"><i class="bi bi-trash3"></i></a>
-                        </td>
-                    </tr>
-                }
+            <tbody id="user-table-data">
+                <tr>
+                    <td colspan="6"></td>
+                </tr>
             </tbody>
         </table>
     </div>
 </div>
+
+<!-- Modal Create -->
+<div class="modal fade" id="create-user-modal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="createUserModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="createUserModalLabel">Add user</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="mb-3">
+                    <label for="name" class="form-label">Name</label>
+                    <input type="text" class="form-control" id="name" placeholder="name@example.com">
+                </div>
+                <div class="mb-3">
+                    <label for="phone" class="form-label">Phone</label>
+                    <input type="text" class="form-control" id="phone" placeholder="name@example.com">
+                </div>
+                <div class="mb-3">
+                    <label for="email" class="form-label">Email</label>
+                    <input type="email" class="form-control" id="email" placeholder="name@example.com">
+                </div>
+                <div class="mb-3">
+                    <label for="role" class="form-label">Role</label>
+                    <select class="form-select" aria-label="selectRole" id="role">
+                        <option value="1" selected>Normal user</option>
+                        <option value="0">Admin</option>
+                    </select>
+                </div>
+                <div class="mb-3">
+                    <div class="form-check form-switch">
+                        <input class="form-check-input" type="checkbox" id="status">
+                        <label class="form-check-label" for="status">Active</label>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" onclick="submitCreateUser()">Save</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Edit -->
+<div class="modal fade" id="edit-user-modal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="editUserModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editUserModalLabel">Update user</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="mb-3">
+                    <label for="name-edit" class="form-label">Name</label>
+                    <input type="text" class="form-control" id="name-edit" placeholder="name@example.com">
+                </div>
+                <div class="mb-3">
+                    <label for="phone-edit" class="form-label">Phone</label>
+                    <input type="text" class="form-control" id="phone-edit" placeholder="name@example.com">
+                </div>
+                <div class="mb-3">
+                    <label for="email-edit" class="form-label">Email</label>
+                    <input type="email" class="form-control" id="email-edit" placeholder="name@example.com">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary">Update</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Delete -->
+<div class="modal fade" id="delete-user-modal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="deleteUserModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteUserModalLabel">Delete user</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="mb-3">
+                    Are you sure you want to delete this user?
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-danger">Delete</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@Html.AntiForgeryToken()
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            getUserList();
+        });
+
+        function getUserList() {
+            $.ajax({
+                type: "POST",
+                url: '/User/GetUserListAjax',
+                contentType: 'application/json',
+                headers: {
+                    'RequestVerificationToken': $('input[name="__RequestVerificationToken"]').val(), // Thêm token vào header
+                },
+                success: function (response) {
+                    if (response.status == 0) {
+                        toastr.error('Error', response.message);
+                        return;
+                    }
+
+                    let tableHtml = '';
+                    let userData = response.data;
+                    if (userData.length > 0) {
+                        tableHtml += '<tr>';
+
+                        $.each(userData, function (index, user) {
+                            tableHtml += '<td>' + user.fullName + '</td>';
+                            tableHtml += '<td>' + user.phone + '</td>';
+                            tableHtml += '<td>' + user.email + '</td>';
+                            tableHtml += '<td>' + user.role + '</td>';
+                            tableHtml += '<td>' + user.status + '</td>';
+                            tableHtml += '<td align="center"><button type="button" class="btn btn-primary m-1" onClick="showEditModal()">Edit</button><button type="button" class="btn btn-danger" onClick="showDeleteModal()">Delete</button></td>';
+                        });
+
+                        tableHtml += '</tr>';
+                    }
+                    else {
+                        tableHtml = '<tr><td colspan="6">No data</td></tr>';
+                    }
+
+                    $('#user-table-data').html(tableHtml);
+                },
+                error: function (error) {
+                    toastr.error('Error', error)
+                }
+            });
+        }
+
+        function showCreateModal() {
+            $('#create-user-modal').modal('show');
+        }
+
+        function submitCreateUser() {
+            var data = JSON.stringify({
+                FullName: $('#name').val(),
+                Phone: $('#phone').val(),
+                Email: $('#email').val(),
+                Role: $('#role').val(),
+                Status: $('#status').is(':checked') ? 1 : 0
+            });
+
+            $.ajax({
+                type: "POST",
+                url: '/User/CreateUserAjax',
+                contentType: 'application/json',
+                headers: {
+                    'RequestVerificationToken': $('input[name="__RequestVerificationToken"]').val(), // Thêm token vào header
+                },
+                data: data,
+                success: function (response) {
+                    if (response.status == 0) {
+                        toastr.error('Error', response.message);
+                        return;
+                    }
+
+                    let tableHtml = '';
+                    let userData = response.data;
+                    if (userData.length > 0) {
+                        tableHtml += '<tr>';
+
+                        $.each(userData, function (index, user) {
+                            tableHtml += '<td>' + user.fullName + '</td>';
+                            tableHtml += '<td>' + user.phone + '</td>';
+                            tableHtml += '<td>' + user.email + '</td>';
+                            tableHtml += '<td>' + user.role + '</td>';
+                            tableHtml += '<td>' + user.status + '</td>';
+                            tableHtml += '<td align="center"><button type="button" class="btn btn-primary m-1" onClick="showEditModal()">Edit</button><button type="button" class="btn btn-danger" onClick="showDeleteModal()">Delete</button></td>';
+                        });
+
+                        tableHtml += '</tr>';
+                    }
+                    else {
+                        tableHtml = '<tr><td colspan="6">No data</td></tr>';
+                    }
+
+                    $('#user-table-data').html(tableHtml);
+                },
+                error: function (error) {
+                    toastr.error('Error', error)
+                }
+            });
+        }
+
+        function showEditModal() {
+            $('#edit-user-modal').modal('show');
+        }
+
+        function showDeleteModal() {
+            $('#delete-user-modal').modal('show');
+        }
+    </script>
+}

@@ -14,6 +14,8 @@
 
   <ItemGroup>
     <ProjectReference Include="..\BetFootballLeague.Application\BetFootballLeague.Application.csproj" />
+    <ProjectReference Include="..\BetFootballLeague.Infrastructure\BetFootballLeague.Infrastructure.csproj" />
+    <ProjectReference Include="..\BetFootballLeague.Shared\BetFootballLeague.Shared.csproj" />
   </ItemGroup>
 
 </Project>

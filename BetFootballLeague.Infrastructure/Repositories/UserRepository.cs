@@ -43,6 +43,11 @@ namespace BetFootballLeague.Infrastructure.Repositories
             return await _context.Users.FirstOrDefaultAsync(x => x.Id == id);
         }
 
+        public async Task<User?> GetUserByPhoneOrEmailAsync(string input)
+        {
+            return await _context.Users.FirstOrDefaultAsync(x => x.Phone == input || x.Email == input);
+        }
+
         public async Task UpdateUserAsync(User user)
         {
             _context.Users.Update(user);

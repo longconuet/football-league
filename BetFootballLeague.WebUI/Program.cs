@@ -2,6 +2,7 @@ using BetFootballLeague.Application.Services;
 using BetFootballLeague.Domain.Repositories;
 using BetFootballLeague.Infrastructure.Data;
 using BetFootballLeague.Infrastructure.Repositories;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -14,6 +15,11 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<UserService>();
+
+builder.Services.AddControllersWithViews(options =>
+{
+    options.Filters.Add(new AutoValidateAntiforgeryTokenAttribute());
+});
 
 builder.Services.AddControllersWithViews()
      .AddRazorRuntimeCompilation();
