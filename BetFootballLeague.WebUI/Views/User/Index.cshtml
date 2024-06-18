@@ -79,6 +79,7 @@
 <div class="modal fade" id="edit-user-modal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="editUserModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
+            <input type="hidden" id="update-user-id" value="" />
             <div class="modal-header">
                 <h5 class="modal-title" id="editUserModalLabel">Update user</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -109,6 +110,7 @@
 <div class="modal fade" id="delete-user-modal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="deleteUserModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
+            <input type="hidden" id="delete-user-id" value="" />
             <div class="modal-header">
                 <h5 class="modal-title" id="deleteUserModalLabel">Delete user</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -134,13 +136,15 @@
             getUserList();
         });
 
+        var token = $('input[name="__RequestVerificationToken"]').val();
+
         function getUserList() {
             $.ajax({
-                type: "POST",
+                type: "GET",
                 url: '/User/GetUserListAjax',
                 contentType: 'application/json',
                 headers: {
-                    'RequestVerificationToken': $('input[name="__RequestVerificationToken"]').val(), // Thêm token vào header
+                    'RequestVerificationToken': token, // Thêm token vào header
                 },
                 success: function (response) {
                     if (response.status == 0) {
@@ -151,18 +155,16 @@
                     let tableHtml = '';
                     let userData = response.data;
                     if (userData.length > 0) {
-                        tableHtml += '<tr>';
-
                         $.each(userData, function (index, user) {
+                            tableHtml += '<tr>';
                             tableHtml += '<td>' + user.fullName + '</td>';
                             tableHtml += '<td>' + user.phone + '</td>';
                             tableHtml += '<td>' + user.email + '</td>';
-                            tableHtml += '<td>' + user.role + '</td>';
-                            tableHtml += '<td>' + user.status + '</td>';
-                            tableHtml += '<td align="center"><button type="button" class="btn btn-primary m-1" onClick="showEditModal()">Edit</button><button type="button" class="btn btn-danger" onClick="showDeleteModal()">Delete</button></td>';
+                            tableHtml += '<td>' + getRoleLabel(user.role) + '</td>';
+                            tableHtml += '<td>' + getStatusLabel(user.status) + '</td>';
+                            tableHtml += '<td align="center"><button type="button" class="btn btn-primary m-1" onClick="showEditModal(\'' + user.id + '\')"><i class="bi bi-pencil-fill"></i> Edit</button><button type="button" class="btn btn-danger" onClick="showDeleteModal()"><i class="bi bi-trash-fill"></i> Delete</button></td>';
+                            tableHtml += '</tr>';
                         });
-
-                        tableHtml += '</tr>';
                     }
                     else {
                         tableHtml = '<tr><td colspan="6">No data</td></tr>';
@@ -174,6 +176,20 @@
                     toastr.error('Error', error)
                 }
             });
+        }
+
+        function getStatusLabel(status) {
+            if (status == 1) {
+                return '<span class="badge bg-success">Active</span>';
+            }
+            return '<span class="badge bg-danger">Inactive</span>';
+        }
+
+        function getRoleLabel(role) {
+            if (role == 1) {
+                return '<span class="badge rounded-pill bg-success">Normal user</span>';
+            }
+            return '<span class="badge rounded-pill bg-primary">Admin</span>';
         }
 
         function showCreateModal() {
@@ -195,10 +211,8 @@
                 type: "POST",
                 contentType: "application/json;charset=utf-8",
                 dataType: "json",
-                async: true,
-                processData: false,
                 headers: {
-                    'RequestVerificationToken': $('input[name="__RequestVerificationToken"]').val(), // Thêm token vào header
+                    'RequestVerificationToken': token
                 },                
                 success: function (response) {
                     if (response.status == 0) {
@@ -206,27 +220,8 @@
                         return;
                     }
 
-                    let tableHtml = '';
-                    let userData = response.data;
-                    if (userData.length > 0) {
-                        tableHtml += '<tr>';
-
-                        $.each(userData, function (index, user) {
-                            tableHtml += '<td>' + user.fullName + '</td>';
-                            tableHtml += '<td>' + user.phone + '</td>';
-                            tableHtml += '<td>' + user.email + '</td>';
-                            tableHtml += '<td>' + user.role + '</td>';
-                            tableHtml += '<td>' + user.status + '</td>';
-                            tableHtml += '<td align="center"><button type="button" class="btn btn-primary m-1" onClick="showEditModal()">Edit</button><button type="button" class="btn btn-danger" onClick="showDeleteModal()">Delete</button></td>';
-                        });
-
-                        tableHtml += '</tr>';
-                    }
-                    else {
-                        tableHtml = '<tr><td colspan="6">No data</td></tr>';
-                    }
-
-                    $('#user-table-data').html(tableHtml);
+                    getUserList();
+                    $('#create-user-modal').modal('hide');
                 },
                 error: function (error) {
                     toastr.error('Error', error)
@@ -234,8 +229,34 @@
             });
         }
 
-        function showEditModal() {
-            $('#edit-user-modal').modal('show');
+        function showEditModal(id) {
+            $.ajax({
+                type: "GET",
+                url: '/User/GetUserInfoAjax/' + id,
+                contentType: 'application/json',
+                headers: {
+                    'RequestVerificationToken': token
+                },
+                success: function (response) {
+                    if (response.status == 0) {
+                        toastr.error('Error', response.message);
+                        return;
+                    }
+
+                    let userInfo = response.data;
+                    $('#update-user-id').val(id);
+                    $('#name-edit').val(userInfo.fullName);
+                    $('#phone-edit').val(userInfo.phone);
+                    $('#email-edit').val(userInfo.email);
+                    $('#edit-user-modal').modal('show');
+                },
+                error: function (error) {
+                    $('#update-user-id').val('');
+                    toastr.error('Error', error)
+                }
+            });
+
+            
         }
 
         function showDeleteModal() {

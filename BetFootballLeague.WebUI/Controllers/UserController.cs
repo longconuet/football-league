@@ -1,6 +1,7 @@
 ﻿using Azure;
 using BetFootballLeague.Application.DTOs;
 using BetFootballLeague.Application.Services;
+using BetFootballLeague.Domain.Entities;
 using BetFootballLeague.Shared.Enums;
 using BetFootballLeague.WebUI.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -22,7 +23,7 @@ namespace BetFootballLeague.WebUI.Controllers
             return View();
         }
 
-        [HttpPost]
+        [HttpGet]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> GetUserListAjax()
         {
@@ -47,7 +48,7 @@ namespace BetFootballLeague.WebUI.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateUserAjax([FromBody] UserDto request)
+        public async Task<IActionResult> CreateUserAjax([FromBody] CreateUserRequestDto request)
         {
             try
             {
@@ -82,6 +83,38 @@ namespace BetFootballLeague.WebUI.Controllers
             catch (Exception ex)
             {
                 return Json(new ResponseModel
+                {
+                    Status = ResponseStatusEnum.FAILED,
+                    Message = ex.Message,
+                });
+            }
+        }
+
+        [HttpGet]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> GetUserInfoAjax(Guid id)
+        {
+            try
+            {
+                UserDto? user = await _userService.GetUserById(id);
+                if (user == null)
+                {
+                    return Json(new ResponseModel<UserDto>
+                    {
+                        Status = ResponseStatusEnum.FAILED,
+                        Message = "User not found"
+                    });
+                }
+
+                return Json(new ResponseModel<UserDto>
+                {
+                    Status = ResponseStatusEnum.SUCCEED,
+                    Data = user
+                });
+            }
+            catch (Exception ex)
+            {
+                return Json(new ResponseModel<UserDto>
                 {
                     Status = ResponseStatusEnum.FAILED,
                     Message = ex.Message,

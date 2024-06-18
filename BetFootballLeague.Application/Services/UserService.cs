@@ -41,7 +41,7 @@ namespace BetFootballLeague.Application.Services
             return user != null ? _mapper.Map<UserDto>(user) : null;
         }
 
-        public async Task AddUser(UserDto userDto)
+        public async Task AddUser(CreateUserRequestDto userDto)
         {
             await _userRepository.AddUserAsync(_mapper.Map<User>(userDto));
         }
