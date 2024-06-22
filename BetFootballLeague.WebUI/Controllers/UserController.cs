@@ -1,11 +1,8 @@
-﻿using Azure;
-using BetFootballLeague.Application.DTOs;
+﻿using BetFootballLeague.Application.DTOs;
 using BetFootballLeague.Application.Services;
-using BetFootballLeague.Domain.Entities;
 using BetFootballLeague.Shared.Enums;
 using BetFootballLeague.WebUI.Models;
 using Microsoft.AspNetCore.Mvc;
-using System.Text.Json;
 
 namespace BetFootballLeague.WebUI.Controllers
 {
@@ -115,6 +112,129 @@ namespace BetFootballLeague.WebUI.Controllers
             catch (Exception ex)
             {
                 return Json(new ResponseModel<UserDto>
+                {
+                    Status = ResponseStatusEnum.FAILED,
+                    Message = ex.Message,
+                });
+            }
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> UpdateUserAjax([FromBody] UpdateUserRequestDto request)
+        {
+            try
+            {
+                UserDto? user = await _userService.GetUserById(request.Id);
+                if (user == null)
+                {
+                    return Json(new ResponseModel<UserDto>
+                    {
+                        Status = ResponseStatusEnum.FAILED,
+                        Message = "User not found"
+                    });
+                }
+
+                var existUserByEmail = await _userService.GetUserByPhoneOrEmail(request.Email, request.Id);
+                if (existUserByEmail != null)
+                {
+                    return Json(new ResponseModel
+                    {
+                        Status = ResponseStatusEnum.FAILED,
+                        Message = "Email is already exist",
+                    });
+                }
+
+                var existUserByPhone = await _userService.GetUserByPhoneOrEmail(request.Phone, request.Id);
+                if (existUserByPhone != null)
+                {
+                    return Json(new ResponseModel
+                    {
+                        Status = ResponseStatusEnum.FAILED,
+                        Message = "Phone is already exist",
+                    });
+                }
+
+                user.FullName = request.FullName;
+                user.Phone = request.Phone;
+                user.Email = request.Email;
+                await _userService.UpdateUser(user);
+
+                return Json(new ResponseModel
+                {
+                    Status = ResponseStatusEnum.SUCCEED,
+                    Message = "Update user successfully"
+                });
+            }
+            catch (Exception ex)
+            {
+                return Json(new ResponseModel
+                {
+                    Status = ResponseStatusEnum.FAILED,
+                    Message = ex.Message,
+                });
+            }
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> DeleteUserAjax(Guid id)
+        {
+            try
+            {
+                UserDto? user = await _userService.GetUserById(id);
+                if (user == null)
+                {
+                    return Json(new ResponseModel<UserDto>
+                    {
+                        Status = ResponseStatusEnum.FAILED,
+                        Message = "User not found"
+                    });
+                }
+
+                await _userService.DeleteUser(user);
+
+                return Json(new ResponseModel
+                {
+                    Status = ResponseStatusEnum.SUCCEED,
+                    Message = "Delete user successfully"
+                });
+            }
+            catch (Exception ex)
+            {
+                return Json(new ResponseModel
+                {
+                    Status = ResponseStatusEnum.FAILED,
+                    Message = ex.Message,
+                });
+            }
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> UpdateUserStatusAjax([FromBody] UpdateUserStatusRequestDto request)
+        {
+            try
+            {
+                UserDto? user = await _userService.GetUserById(request.Id);
+                if (user == null)
+                {
+                    return Json(new ResponseModel<UserDto>
+                    {
+                        Status = ResponseStatusEnum.FAILED,
+                        Message = "User not found"
+                    });
+                }
+
+                user.Status = (UserStatusEnum)request.Status;
+                await _userService.UpdateUser(user);
+
+                return Json(new ResponseModel
+                {
+                    Status = ResponseStatusEnum.SUCCEED,
+                    Message = user.Status == UserStatusEnum.Active ? "Active user successfully" : "De-active user successfully"
+                });
+            }
+            catch (Exception ex)
+            {
+                return Json(new ResponseModel
                 {
                     Status = ResponseStatusEnum.FAILED,
                     Message = ex.Message,

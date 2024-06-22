@@ -100,7 +100,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary">Update</button>
+                <button type="button" class="btn btn-primary" onclick="submitUpdateUser()">Update</button>
             </div>
         </div>
     </div>
@@ -122,7 +122,30 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-danger">Delete</button>
+                <button type="button" class="btn btn-danger" onclick="submitDeleteUser()">Delete</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Update Status -->
+<div class="modal fade" id="update-status-user-modal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="updateStatusUserModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <input type="hidden" id="update-status-user-id" value="" />
+            <input type="hidden" id="new-user-status" value="" />
+            <div class="modal-header">
+                <h5 class="modal-title" id="updateStatusUserModalLabel">Update user status</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="mb-3">
+                    Are you sure you want to <strong id="status-update-span"></strong> this user?
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-success" onclick="submitUpdateUserStatus()">Update</button>
             </div>
         </div>
     </div>
@@ -162,7 +185,18 @@
                             tableHtml += '<td>' + user.email + '</td>';
                             tableHtml += '<td>' + getRoleLabel(user.role) + '</td>';
                             tableHtml += '<td>' + getStatusLabel(user.status) + '</td>';
-                            tableHtml += '<td align="center"><button type="button" class="btn btn-primary m-1" onClick="showEditModal(\'' + user.id + '\')"><i class="bi bi-pencil-fill"></i> Edit</button><button type="button" class="btn btn-danger" onClick="showDeleteModal()"><i class="bi bi-trash-fill"></i> Delete</button></td>';
+
+                            let editBtnHtml = '<button type="button" class="btn btn-primary m-1" onClick="showEditModal(\'' + user.id + '\')"><i class="bi bi-pencil-fill"></i> Edit</button>';
+                            let deleteBtnHtml = '<button type="button" class="btn btn-danger" onClick="showDeleteModal(\'' + user.id + '\')"><i class="bi bi-trash-fill"></i> Delete</button>';
+                            let updateStatusBtnHtml = '';
+                            if (user.status == 0) {
+                                updateStatusBtnHtml = '<button type="button" class="btn btn-success m-1" onClick="showUpdateStatusModal(\'' + user.id + '\', ' + user.status + ')"><i class="bi bi-check-circle"></i> Active</button>';
+                            }
+                            else {
+                                updateStatusBtnHtml = '<button type="button" class="btn btn-warning m-1" onClick="showUpdateStatusModal(\'' + user.id + '\', ' + user.status + ')"><i class="bi bi-dash-circle"></i> De-Active</button>';
+                            }
+
+                            tableHtml += '<td>' + updateStatusBtnHtml + editBtnHtml + deleteBtnHtml + '</td>';
                             tableHtml += '</tr>';
                         });
                     }
@@ -220,6 +254,7 @@
                         return;
                     }
 
+                    toastr.success('Success', response.message);
                     getUserList();
                     $('#create-user-modal').modal('hide');
                 },
@@ -255,12 +290,112 @@
                     toastr.error('Error', error)
                 }
             });
-
-            
         }
 
-        function showDeleteModal() {
+        function submitUpdateUser() {
+            var data = {
+                Id: $('#update-user-id').val(),
+                FullName: $('#name-edit').val(),
+                Phone: $('#phone-edit').val(),
+                Email: $('#email-edit').val()
+            };
+
+            $.ajax({
+                url: '/User/UpdateUserAjax',
+                data: JSON.stringify(data),
+                type: "POST",
+                contentType: "application/json;charset=utf-8",
+                dataType: "json",
+                headers: {
+                    'RequestVerificationToken': token
+                },
+                success: function (response) {
+                    if (response.status == 0) {
+                        toastr.error('Error', response.message);
+                        return;
+                    }
+
+                    toastr.success('Success', response.message);
+                    getUserList();
+                    $('#edit-user-modal').modal('hide');
+                },
+                error: function (error) {
+                    toastr.error('Error', error)
+                }
+            });
+        }
+
+        function showDeleteModal(id) {
+            $('#delete-user-id').val(id);
             $('#delete-user-modal').modal('show');
+        }
+
+        function submitDeleteUser() {
+            $.ajax({
+                url: '/User/DeleteUserAjax/' + $('#delete-user-id').val(),
+                type: "POST",
+                contentType: "application/json;charset=utf-8",
+                dataType: "json",
+                headers: {
+                    'RequestVerificationToken': token
+                },
+                success: function (response) {
+                    if (response.status == 0) {
+                        toastr.error('Error', response.message);
+                        return;
+                    }
+
+                    toastr.success('Success', response.message);
+                    getUserList();
+                    $('#delete-user-modal').modal('hide');
+                },
+                error: function (error) {
+                    toastr.error('Error', error)
+                }
+            });
+        }
+
+        function showUpdateStatusModal(id, currentStatus) {
+            $('#update-status-user-id').val(id);
+            $('#new-user-status').val(currentStatus == 0 ? 1 : 0);
+            if (currentStatus == 0) {
+                $('#status-update-span').html('<span class="text-success">ACTIVE</span>');
+            }
+            else {
+                $('#status-update-span').html('<span class="text-danger">DE-ACTIVE</span>');
+            }
+            $('#update-status-user-modal').modal('show');
+        }
+
+        function submitUpdateUserStatus() {
+            var data = {
+                Id: $('#update-status-user-id').val(),
+                Status: $('#new-user-status').val()
+            };
+
+            $.ajax({
+                url: '/User/UpdateUserStatusAjax',
+                data: JSON.stringify(data),
+                type: "POST",
+                contentType: "application/json;charset=utf-8",
+                dataType: "json",
+                headers: {
+                    'RequestVerificationToken': token
+                },
+                success: function (response) {
+                    if (response.status == 0) {
+                        toastr.error('Error', response.message);
+                        return;
+                    }
+
+                    toastr.success('Success', response.message);
+                    getUserList();
+                    $('#update-status-user-modal').modal('hide');
+                },
+                error: function (error) {
+                    toastr.error('Error', error)
+                }
+            });
         }
     </script>
 }

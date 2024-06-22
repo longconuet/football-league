@@ -35,10 +35,18 @@ namespace BetFootballLeague.Application.Services
             return user != null ? _mapper.Map<UserDto>(user) : null;
         }
 
-        public async Task<UserDto?> GetUserByPhoneOrEmail(string input)
+        public async Task<UserDto?> GetUserByPhoneOrEmail(string input, Guid? currentUserId = null)
         {
             var user = await _userRepository.GetUserByPhoneOrEmailAsync(input);
-            return user != null ? _mapper.Map<UserDto>(user) : null;
+            if (user != null)
+            {
+                if (currentUserId != null && user.Id == currentUserId)
+                {
+                    return null;
+                }
+                return _mapper.Map<UserDto>(user);
+            }
+            return null;
         }
 
         public async Task AddUser(CreateUserRequestDto userDto)

@@ -9,8 +9,8 @@ namespace BetFootballLeague.Application.Mappings
         public MappingProfile()
         {
             CreateMap<User, UserDto>().ReverseMap();
-            CreateMap<User, CreateUserRequestDto>().ReverseMap();
-            CreateMap<User, UpdateUserRequestDto>().ReverseMap();
+            CreateMap<CreateUserRequestDto, User>();
+            CreateMap<UpdateUserRequestDto, User>();
         }
     }
 }
