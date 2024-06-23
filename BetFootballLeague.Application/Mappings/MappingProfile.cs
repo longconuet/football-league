@@ -19,6 +19,10 @@ namespace BetFootballLeague.Application.Mappings
             CreateMap<Round, RoundDto>().ReverseMap();
             CreateMap<CreateRoundRequestDto, Round>();
             CreateMap<UpdateGroupRequestDto, Round>();
+
+            CreateMap<Team, TeamDto>().ReverseMap();
+            CreateMap<CreateTeamRequestDto, Team>();
+            CreateMap<UpdateTeamRequestDto, Team>();
         }
     }
 }

@@ -8,3 +8,11 @@ $(document).ajaxStart(function () {
 }).ajaxStop(function () {
     $('#loadingGif, #overlay').hide();
 });
+
+function showLoading() {
+    $('#loadingGif, #overlay').show();
+}
+
+function hideLoading() {
+    $('#loadingGif, #overlay').hide();
+}

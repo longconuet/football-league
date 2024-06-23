@@ -14,7 +14,7 @@ function getGroupList() {
         },
         success: function (response) {
             if (response.status == 0) {
-                toastr.error('Error', response.message);
+                toastr.error(response.message, 'Error');
                 return;
             }
 
@@ -33,7 +33,7 @@ function getGroupList() {
                 });
             }
             else {
-                tableHtml = '<tr><td colspan="2">No data</td></tr>';
+                tableHtml = '<tr><td colspan="2" class="text-center">No data</td></tr>';
             }
 
             $('#group-table-data').html(tableHtml);
@@ -64,11 +64,11 @@ function submitCreateGroup() {
         },
         success: function (response) {
             if (response.status == 0) {
-                toastr.error('Error', response.message);
+                toastr.error(response.message, 'Error');
                 return;
             }
 
-            toastr.success('Success', response.message);
+            toastr.success(response.message, 'Success');
             getGroupList();
             $('#create-group-modal').modal('hide');
             clearCreateModalInput();
@@ -89,7 +89,7 @@ function showEditModal(id) {
         },
         success: function (response) {
             if (response.status == 0) {
-                toastr.error('Error', response.message);
+                toastr.error(response.message, 'Error');
                 return;
             }
 
@@ -122,11 +122,11 @@ function submitUpdateGroup() {
         },
         success: function (response) {
             if (response.status == 0) {
-                toastr.error('Error', response.message);
+                toastr.error(response.message, 'Error');
                 return;
             }
 
-            toastr.success('Success', response.message);
+            toastr.success(response.message, 'Success');
             getGroupList();
             $('#edit-group-modal').modal('hide');
         },
@@ -152,11 +152,11 @@ function submitDeleteGroup() {
         },
         success: function (response) {
             if (response.status == 0) {
-                toastr.error('Error', response.message);
+                toastr.error(response.message, 'Error');
                 return;
             }
 
-            toastr.success('Success', response.message);
+            toastr.success(response.message, 'Success');
             getGroupList();
             $('#delete-group-modal').modal('hide');
         },

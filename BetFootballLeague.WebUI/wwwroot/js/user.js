@@ -14,7 +14,7 @@ function getUserList() {
         },
         success: function (response) {
             if (response.status == 0) {
-                toastr.error('Error', response.message);
+                toastr.error(response.message, 'Error');
                 return;
             }
 
@@ -44,7 +44,7 @@ function getUserList() {
                 });
             }
             else {
-                tableHtml = '<tr><td colspan="6">No data</td></tr>';
+                tableHtml = '<tr><td colspan="6" class="text-center">No data</td></tr>';
             }
 
             $('#user-table-data').html(tableHtml);
@@ -93,11 +93,11 @@ function submitCreateUser() {
         },
         success: function (response) {
             if (response.status == 0) {
-                toastr.error('Error', response.message);
+                toastr.error(response.message, 'Error');
                 return;
             }
 
-            toastr.success('Success', response.message);
+            toastr.success(response.message, 'Success');
             getUserList();
             $('#create-user-modal').modal('hide');
             clearCreateModalInput();
@@ -118,7 +118,7 @@ function showEditModal(id) {
         },
         success: function (response) {
             if (response.status == 0) {
-                toastr.error('Error', response.message);
+                toastr.error(response.message, 'Error');
                 return;
             }
 
@@ -155,11 +155,11 @@ function submitUpdateUser() {
         },
         success: function (response) {
             if (response.status == 0) {
-                toastr.error('Error', response.message);
+                toastr.error(response.message, 'Error');
                 return;
             }
 
-            toastr.success('Success', response.message);
+            toastr.success(response.message, 'Success');
             getUserList();
             $('#edit-user-modal').modal('hide');
         },
@@ -185,11 +185,11 @@ function submitDeleteUser() {
         },
         success: function (response) {
             if (response.status == 0) {
-                toastr.error('Error', response.message);
+                toastr.error(response.message, 'Error');
                 return;
             }
 
-            toastr.success('Success', response.message);
+            toastr.success(response.message, 'Success');
             getUserList();
             $('#delete-user-modal').modal('hide');
         },
@@ -228,11 +228,11 @@ function submitUpdateUserStatus() {
         },
         success: function (response) {
             if (response.status == 0) {
-                toastr.error('Error', response.message);
+                toastr.error(response.message, 'Error');
                 return;
             }
 
-            toastr.success('Success', response.message);
+            toastr.success(response.message, 'Success');
             getUserList();
             $('#update-status-user-modal').modal('hide');
         },

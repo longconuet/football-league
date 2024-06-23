@@ -14,7 +14,7 @@ function getRoundList() {
         },
         success: function (response) {
             if (response.status == 0) {
-                toastr.error('Error', response.message);
+                toastr.error(response.message, 'Error');
                 return;
             }
 
@@ -36,7 +36,7 @@ function getRoundList() {
                 });
             }
             else {
-                tableHtml = '<tr><td colspan="5">No data</td></tr>';
+                tableHtml = '<tr><td colspan="5" class="text-center">No data</td></tr>';
             }
 
             $('#round-table-data').html(tableHtml);
@@ -69,11 +69,11 @@ function submitCreateRound() {
         },
         success: function (response) {
             if (response.status == 0) {
-                toastr.error('Error', response.message);
+                toastr.error(response.message, 'Error');
                 return;
             }
 
-            toastr.success('Success', response.message);
+            toastr.success(response.message, 'Success');
             getRoundList();
             $('#create-round-modal').modal('hide');
             clearCreateModalInput();
@@ -94,7 +94,7 @@ function showEditModal(id) {
         },
         success: function (response) {
             if (response.status == 0) {
-                toastr.error('Error', response.message);
+                toastr.error(response.message, 'Error');
                 return;
             }
 
@@ -129,11 +129,11 @@ function submitUpdateRound() {
         },
         success: function (response) {
             if (response.status == 0) {
-                toastr.error('Error', response.message);
+                toastr.error(response.message, 'Error');
                 return;
             }
 
-            toastr.success('Success', response.message);
+            toastr.success(response.message, 'Success');
             getRoundList();
             $('#edit-round-modal').modal('hide');
         },
@@ -159,11 +159,11 @@ function submitDeleteRound() {
         },
         success: function (response) {
             if (response.status == 0) {
-                toastr.error('Error', response.message);
+                toastr.error(response.message, 'Error');
                 return;
             }
 
-            toastr.success('Success', response.message);
+            toastr.success(response.message, 'Success');
             getRoundList();
             $('#delete-round-modal').modal('hide');
         },
