@@ -2,11 +2,6 @@
 using BetFootballLeague.Domain.Repositories;
 using BetFootballLeague.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BetFootballLeague.Infrastructure.Repositories
 {
@@ -21,7 +16,7 @@ namespace BetFootballLeague.Infrastructure.Repositories
 
         public async Task<List<LeagueGroup>> GetLeagueGroupsAsync()
         {
-            return await _context.Groups.ToListAsync();
+            return await _context.Groups.Include(x => x.Teams).ToListAsync();
         }
 
         public async Task<LeagueGroup?> GetLeagueGroupByIdAsync(Guid id)

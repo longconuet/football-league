@@ -25,6 +25,17 @@ function getGroupList() {
                     tableHtml += '<tr>';
                     tableHtml += '<td>' + group.name + '</td>';
 
+                    tableHtml += '<td>';
+                    if (group.teams.length > 0) {
+                        $.each(group.teams, function (index, team) {
+                            tableHtml += team.name;
+                        });
+                    }
+                    else {
+                        tableHtml += 'No teams';
+                    }
+                    tableHtml += '</td>';
+
                     let editBtnHtml = '<button type="button" class="btn btn-primary m-1" onClick="showEditModal(\'' + group.id + '\')"><i class="bi bi-pencil-fill"></i> Edit</button>';
                     let deleteBtnHtml = '<button type="button" class="btn btn-danger" onClick="showDeleteModal(\'' + group.id + '\')"><i class="bi bi-trash-fill"></i> Delete</button>';
 
@@ -33,7 +44,7 @@ function getGroupList() {
                 });
             }
             else {
-                tableHtml = '<tr><td colspan="2" class="text-center">No data</td></tr>';
+                tableHtml = '<tr><td colspan="3" class="text-center">No data</td></tr>';
             }
 
             $('#group-table-data').html(tableHtml);

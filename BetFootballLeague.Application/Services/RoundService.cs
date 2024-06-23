@@ -2,6 +2,7 @@
 using BetFootballLeague.Application.DTOs;
 using BetFootballLeague.Domain.Entities;
 using BetFootballLeague.Domain.Repositories;
+using System.Linq.Expressions;
 
 namespace BetFootballLeague.Application.Services
 {
@@ -16,9 +17,9 @@ namespace BetFootballLeague.Application.Services
             _mapper = mapper;
         }
 
-        public async Task<List<RoundDto>> GetRounds()
+        public async Task<List<RoundDto>> GetRounds(Expression<Func<Round, bool>>? predicate = null)
         {
-            var rounds = await _roundRepository.GetRoundsAsync();
+            var rounds = await _roundRepository.GetRoundsAsync(predicate);
             return _mapper.Map<List<RoundDto>>(rounds);
         }
 

@@ -2,6 +2,7 @@
 using BetFootballLeague.Domain.Repositories;
 using BetFootballLeague.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
+using System.Linq.Expressions;
 
 namespace BetFootballLeague.Infrastructure.Repositories
 {
@@ -14,9 +15,13 @@ namespace BetFootballLeague.Infrastructure.Repositories
             _context = context;
         }
 
-        public async Task<List<Round>> GetRoundsAsync()
+        public async Task<List<Round>> GetRoundsAsync(Expression<Func<Round, bool>>? predicate = null)
         {
-            return await _context.Rounds.ToListAsync();
+            if (predicate != null)
+            {
+                return await _context.Rounds.Where(predicate).OrderBy(x => x.Index).ToListAsync();
+            }
+            return await _context.Rounds.OrderBy(x => x.Index).ToListAsync();
         }
 
         public async Task<Round?> GetRoundByIdAsync(Guid id)

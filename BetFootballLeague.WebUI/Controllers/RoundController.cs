@@ -114,6 +114,7 @@ namespace BetFootballLeague.WebUI.Controllers
 
                 round.Name = request.Name;
                 round.Index = request.Index;
+                round.BetPoint = request.BetPoint;
                 await _roundService.UpdateRound(round);
 
                 return Json(new ResponseModel

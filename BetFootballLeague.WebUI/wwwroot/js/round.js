@@ -56,6 +56,7 @@ function submitCreateRound() {
         Name: $('#name').val(),
         Code: $('#code').val(),
         Index: $('#index').val(),
+        BetPoint: $('#bet-point').val(),
     };
 
     $.ajax({
@@ -102,6 +103,7 @@ function showEditModal(id) {
             $('#update-round-id').val(id);
             $('#name-edit').val(roundInfo.name);
             $('#index-edit').val(roundInfo.index);
+            $('#bet-point-edit').val(roundInfo.betPoint);
             $('#edit-round-modal').modal('show');
         },
         error: function (error) {
@@ -115,7 +117,8 @@ function submitUpdateRound() {
     var data = {
         Id: $('#update-round-id').val(),
         Name: $('#name-edit').val(),
-        Index: $('#index-edit').val()
+        Index: $('#index-edit').val(),
+        BetPoint: $('#bet-point-edit').val(),
     };
 
     $.ajax({
@@ -177,4 +180,5 @@ function clearCreateModalInput() {
     $('#name').val('');
     $('#code').val('');
     $('#index').val('');
+    $('#bet-point').val('');
 }

@@ -4,6 +4,7 @@ using BetFootballLeague.Infrastructure.Data;
 using BetFootballLeague.Infrastructure.Repositories;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
