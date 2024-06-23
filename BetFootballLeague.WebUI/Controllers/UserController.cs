@@ -15,13 +15,12 @@ namespace BetFootballLeague.WebUI.Controllers
             _userService = userService;
         }
 
-        public async Task<IActionResult> Index()
+        public IActionResult Index()
         {
             return View();
         }
 
         [HttpGet]
-        [ValidateAntiForgeryToken]
         public async Task<IActionResult> GetUserListAjax()
         {
             try
@@ -88,7 +87,6 @@ namespace BetFootballLeague.WebUI.Controllers
         }
 
         [HttpGet]
-        [ValidateAntiForgeryToken]
         public async Task<IActionResult> GetUserInfoAjax(Guid id)
         {
             try
