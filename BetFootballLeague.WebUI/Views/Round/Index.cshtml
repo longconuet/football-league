@@ -1,0 +1,117 @@
+﻿@{
+    ViewData["Title"] = "Round Page";
+}
+
+<div>
+    <h1>Rounds List</h1>
+    <div class="row mb-3 mt-5">
+        <div class="col-auto text-right">
+            <button type="button" class="btn btn-success" onclick="showCreateModal()">
+                <i class="bi bi-plus-lg"></i> Create New Round
+            </button>
+        </div>
+    </div>
+    <div>
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th scope="col">Index</th>
+                    <th scope="col">Name</th>
+                    <th scope="col">Code</th>
+                    <th scope="col">BetPoint</th>
+                    <th scope="col" class="text-center">Action</th>
+                </tr>
+            </thead>
+            <tbody id="round-table-data">
+                <tr>
+                    <td colspan="5" class="text-center"></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- Modal Create -->
+<div class="modal fade" id="create-round-modal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="createRoundModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="createRoundModalLabel">Add round</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="mb-3">
+                    <label for="index" class="form-label">Index</label>
+                    <input type="number" min="1" max="10" class="form-control" id="index">
+                </div>
+                <div class="mb-3">
+                    <label for="name" class="form-label">Name</label>
+                    <input type="text" class="form-control" id="name">
+                </div>
+                <div class="mb-3">
+                    <label for="code" class="form-label">Code</label>
+                    <input type="text" class="form-control" id="code">
+                </div>                
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" onclick="submitCreateRound()">Save</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Edit -->
+<div class="modal fade" id="edit-round-modal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="editRoundModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <input type="hidden" id="update-round-id" value="" />
+            <div class="modal-header">
+                <h5 class="modal-title" id="editRoundModalLabel">Update round</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="mb-3">
+                    <label for="index-edit" class="form-label">Index</label>
+                    <input type="number" min="1" max="10" class="form-control" id="index-edit">
+                </div>
+                <div class="mb-3">
+                    <label for="name-edit" class="form-label">Name</label>
+                    <input type="text" class="form-control" id="name-edit">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" onclick="submitUpdateRound()">Update</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Delete -->
+<div class="modal fade" id="delete-round-modal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="deleteRoundModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <input type="hidden" id="delete-round-id" value="" />
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteRoundModalLabel">Delete round</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="mb-3">
+                    Are you sure you want to delete this round?
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-danger" onclick="submitDeleteRound()">Delete</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@Html.AntiForgeryToken()
+
+@section Scripts {
+    <script src="~/js/round.js" asp-append-version="true"></script>
+}
