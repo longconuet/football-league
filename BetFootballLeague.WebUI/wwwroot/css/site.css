@@ -45,3 +45,9 @@ body {
     background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
     z-index: 999; /* Should be less than the loading GIF z-index */
 }
+
+footer {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+}
