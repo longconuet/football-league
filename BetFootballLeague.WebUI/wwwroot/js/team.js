@@ -55,7 +55,7 @@ function getTeamList() {
             if (teamData.length > 0) {
                 $.each(teamData, function (index, team) {
                     tableHtml += '<tr>';
-                    tableHtml += `<td class="text-center"><img src="${team.image}" style="max-width: 150px; max-height: 150px;" alter="img" title="img"></td>`;
+                    tableHtml += `<td class="text-center"><img src="${team.image}" style="max-width: 100px; max-height: 100px;" alter="img" title="img"></td>`;
                     tableHtml += '<td>' + team.name + '</td>';
                     tableHtml += '<td>' + team.group?.name + '</td>';
 

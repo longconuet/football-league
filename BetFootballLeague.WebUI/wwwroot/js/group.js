@@ -27,9 +27,14 @@ function getGroupList() {
 
                     tableHtml += '<td>';
                     if (group.teams.length > 0) {
+                        tableHtml += '<div class="row">';
                         $.each(group.teams, function (index, team) {
-                            tableHtml += team.name;
+                            tableHtml += '<div class="col-md-3">';
+                            tableHtml += `<span><img src="${team.image}" style="max-width: 50px; max-height: 50px;" alter="img" title="img"></span>`;
+                            tableHtml += `<span class="m-2">${team.name}</span>`;
+                            tableHtml += '</div>';
                         });
+                        tableHtml += '</div>';
                     }
                     else {
                         tableHtml += 'No teams';
