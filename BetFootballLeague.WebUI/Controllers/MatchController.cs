@@ -53,7 +53,7 @@ namespace BetFootballLeague.WebUI.Controllers
         {
             try
             {
-                var xx = DateTime.ParseExact($"{request.Date} {request.Time}", "dd/MM/yyyy HH:mm", CultureInfo.CurrentCulture);
+                //var xx = DateTime.ParseExact($"{request.Date} {request.Time}", "dd/MM/yyyy HH:mm", CultureInfo.CurrentCulture);
                 var round = await _roundService.GetRoundById(request.RoundId);
                 if (round == null)
                 {
@@ -188,7 +188,7 @@ namespace BetFootballLeague.WebUI.Controllers
                     });
                 }
 
-                await _matchService.DeleteMatch(match);
+                await _matchService.DeleteMatch(id);
 
                 return Json(new ResponseModel
                 {

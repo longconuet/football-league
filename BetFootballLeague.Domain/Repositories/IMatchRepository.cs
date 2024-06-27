@@ -8,6 +8,6 @@ namespace BetFootballLeague.Domain.Repositories
         Task<LeagueMatch?> GetMatchByIdAsync(Guid id);
         Task AddMatchAsync(LeagueMatch match);
         Task UpdateMatchAsync(LeagueMatch match);
-        Task DeleteMatchAsync(LeagueMatch match);
+        Task DeleteMatchAsync(Guid id);
     }
 }

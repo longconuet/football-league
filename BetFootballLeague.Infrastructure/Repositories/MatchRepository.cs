@@ -2,7 +2,6 @@
 using BetFootballLeague.Domain.Repositories;
 using BetFootballLeague.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace BetFootballLeague.Infrastructure.Repositories
 {
@@ -20,6 +19,7 @@ namespace BetFootballLeague.Infrastructure.Repositories
             return await _context.Matches
                 .Include(x => x.Team1)
                 .Include(x => x.Team2)
+                .Include(x => x.Round)
                 .ToListAsync();
         }
 
@@ -34,8 +34,9 @@ namespace BetFootballLeague.Infrastructure.Repositories
             await _context.SaveChangesAsync();
         }
 
-        public async Task DeleteMatchAsync(LeagueMatch match)
+        public async Task DeleteMatchAsync(Guid id)
         {
+            var match = await _context.Matches.FirstAsync(x => x.Id == id);
             _context.Matches.Remove(match);
             await _context.SaveChangesAsync();
         }        

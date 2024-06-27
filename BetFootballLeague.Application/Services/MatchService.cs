@@ -38,9 +38,9 @@ namespace BetFootballLeague.Application.Services
             await _matchRepository.UpdateMatchAsync(_mapper.Map<LeagueMatch>(matchDto));
         }
 
-        public async Task DeleteMatch(MatchDto matchDto)
+        public async Task DeleteMatch(Guid id)
         {
-            await _matchRepository.DeleteMatchAsync(_mapper.Map<LeagueMatch>(matchDto));
+            await _matchRepository.DeleteMatchAsync(id);
         }
     }
 }

@@ -54,8 +54,16 @@ function setTeamDataForSelect2() {
             }
 
 
-            $(".select2-team").select2({
+            $("#team1, #team2").select2({
                 dropdownParent: $("#create-match-modal"),
+                data: teamData,
+                templateResult: formatState,
+                allowClear: true,
+                placeholder: 'Select a team...'
+            });
+
+            $("#team1-edit, #team2-edit").select2({
+                dropdownParent: $("#edit-match-modal"),
                 data: teamData,
                 templateResult: formatState,
                 allowClear: true,
@@ -84,7 +92,7 @@ function setRoundDataForSelect() {
                 return;
             }
 
-            let selectHtmml = '<option>Select Round...</option>';
+            let selectHtmml = '<option value="">Select Round...</option>';
             let data = response.data;
             if (data.length > 0) {
                 $.each(data, function (index, round) {
@@ -93,6 +101,7 @@ function setRoundDataForSelect() {
             }
 
             $('#round').html(selectHtmml);
+            $('#round-edit').html(selectHtmml);
         },
         error: function (error) {
             toastr.error('Error', error)
@@ -122,6 +131,7 @@ function getMatchList() {
                     tableHtml += '<td>' + match.indexOrder + '</td>';
                     tableHtml += '<td>' + match.date + '</td>';
                     tableHtml += '<td>' + match.time + '</td>';
+                    tableHtml += '<td>' + match.round.name + '</td>';
 
                     tableHtml += '<td>';
                     if (match.team1) {
@@ -153,7 +163,7 @@ function getMatchList() {
                 });
             }
             else {
-                tableHtml = '<tr><td colspan="7" class="text-center">No data</td></tr>';
+                tableHtml = '<tr><td colspan="8" class="text-center">No data</td></tr>';
             }
 
             $('#match-table-data').html(tableHtml);
@@ -247,6 +257,12 @@ function showEditModal(id) {
             //    format: 'dd/mm/yyyy'
             //});
             //initDateTimePicker();
+            if (matchInfo.team1Id != null) {
+                $('#team1-edit').val(matchInfo.team1Id).trigger('change');
+            }
+            if (matchInfo.team2Id != null) {
+                $('#team2-edit').val(matchInfo.team2Id).trigger('change');
+            }
 
             $('#edit-match-modal').modal('show');
         },
@@ -325,4 +341,7 @@ function submitDeleteMatch() {
 
 function clearCreateModalInput() {
     $('#index-order').val('');
+    $('#round').val('');
+    $('#team1').val(null).trigger('change');
+    $('#team2').val(null).trigger('change');
 }
