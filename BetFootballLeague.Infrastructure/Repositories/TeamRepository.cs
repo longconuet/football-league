@@ -14,9 +14,9 @@ namespace BetFootballLeague.Infrastructure.Repositories
             _context = context;
         }
 
-        public async Task<List<Team>> GetTeamsAsync()
+        public async Task<List<Team>> GetTeamsAsync(bool includeGroup = false)
         {
-            return await _context.Teams.Include(x => x.Group).ToListAsync();
+            return includeGroup ? await _context.Teams.Include(x => x.Group).ToListAsync() : await _context.Teams.ToListAsync();
         }
 
         public async Task<Team?> GetTeamByIdAsync(Guid id)

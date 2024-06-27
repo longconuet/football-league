@@ -16,10 +16,10 @@ namespace BetFootballLeague.Application.Services
             _mapper = mapper;
         }
 
-        public async Task<List<MatchDto>> GetMatchs()
+        public async Task<List<MatchDto>> GetMatches()
         {
-            var matchs = await _matchRepository.GetMatchesAsync();
-            return _mapper.Map<List<MatchDto>>(matchs);
+            var matches = await _matchRepository.GetMatchesAsync();
+            return _mapper.Map<List<MatchDto>>(matches);
         }
 
         public async Task<MatchDto?> GetMatchById(Guid id)

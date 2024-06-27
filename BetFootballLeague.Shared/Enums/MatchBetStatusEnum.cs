@@ -3,7 +3,7 @@
     public enum MatchBetStatusEnum
     {
         NOT_ALLOWED,
-        IS_OPENED,
+        OPENING,
         IS_CLOSED
     }
 }

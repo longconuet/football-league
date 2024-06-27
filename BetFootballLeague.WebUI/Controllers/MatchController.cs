@@ -3,16 +3,21 @@ using BetFootballLeague.Application.Services;
 using BetFootballLeague.Shared.Enums;
 using BetFootballLeague.WebUI.Models;
 using Microsoft.AspNetCore.Mvc;
+using System.Globalization;
 
 namespace BetFootballLeague.WebUI.Controllers
 {
     public class MatchController : Controller
     {
         private readonly MatchService _matchService;
+        private readonly RoundService _roundService;
+        private readonly TeamService _teamService;
 
-        public MatchController(MatchService matchService)
+        public MatchController(MatchService matchService, RoundService roundService, TeamService teamService)
         {
             _matchService = matchService;
+            _roundService = roundService;
+            _teamService = teamService;
         }
 
         public IActionResult Index()
@@ -25,7 +30,7 @@ namespace BetFootballLeague.WebUI.Controllers
         {
             try
             {
-                List<MatchDto> matchs = await _matchService.GetMatchs();
+                List<MatchDto> matchs = await _matchService.GetMatches();
 
                 return Json(new ResponseModel<List<MatchDto>>
                 {
@@ -48,6 +53,43 @@ namespace BetFootballLeague.WebUI.Controllers
         {
             try
             {
+                var xx = DateTime.ParseExact($"{request.Date} {request.Time}", "dd/MM/yyyy HH:mm", CultureInfo.CurrentCulture);
+                var round = await _roundService.GetRoundById(request.RoundId);
+                if (round == null)
+                {
+                    return Json(new ResponseModel
+                    {
+                        Status = ResponseStatusEnum.SUCCEED,
+                        Message = "Round not found"
+                    });
+                }
+
+                if (request.Team1Id != null)
+                {
+                    var team1 = await _teamService.GetTeamById(request.Team1Id.Value);
+                    if (team1 == null)
+                    {
+                        return Json(new ResponseModel
+                        {
+                            Status = ResponseStatusEnum.SUCCEED,
+                            Message = "Team 1 not found"
+                        });
+                    }
+                }
+
+                if (request.Team2Id != null)
+                {
+                    var team2 = await _teamService.GetTeamById(request.Team2Id.Value);
+                    if (team2 == null)
+                    {
+                        return Json(new ResponseModel
+                        {
+                            Status = ResponseStatusEnum.SUCCEED,
+                            Message = "Team 2 not found"
+                        });
+                    }
+                }
+
                 await _matchService.AddMatch(request);
 
                 return Json(new ResponseModel

@@ -16,9 +16,9 @@ namespace BetFootballLeague.Application.Services
             _mapper = mapper;
         }
 
-        public async Task<List<TeamDto>> GetTeams()
+        public async Task<List<TeamDto>> GetTeams(bool includeGroup = false)
         {
-            var teams = await _teamRepository.GetTeamsAsync();
+            var teams = await _teamRepository.GetTeamsAsync(includeGroup);
             return _mapper.Map<List<TeamDto>>(teams);
         }
 

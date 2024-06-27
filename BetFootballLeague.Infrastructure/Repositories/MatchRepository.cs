@@ -2,6 +2,7 @@
 using BetFootballLeague.Domain.Repositories;
 using BetFootballLeague.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace BetFootballLeague.Infrastructure.Repositories
 {
@@ -16,7 +17,10 @@ namespace BetFootballLeague.Infrastructure.Repositories
 
         public async Task<List<LeagueMatch>> GetMatchesAsync()
         {
-            return await _context.Matches.ToListAsync();
+            return await _context.Matches
+                .Include(x => x.Team1)
+                .Include(x => x.Team2)
+                .ToListAsync();
         }
 
         public async Task<LeagueMatch?> GetMatchByIdAsync(Guid id)

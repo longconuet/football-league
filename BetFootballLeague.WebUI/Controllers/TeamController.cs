@@ -31,6 +31,29 @@ namespace BetFootballLeague.WebUI.Controllers
         {
             try
             {
+                List<TeamDto> teams = await _teamService.GetTeams(true);
+
+                return Json(new ResponseModel<List<TeamDto>>
+                {
+                    Status = ResponseStatusEnum.SUCCEED,
+                    Data = teams
+                });
+            }
+            catch (Exception ex)
+            {
+                return Json(new ResponseModel<List<TeamDto>>
+                {
+                    Status = ResponseStatusEnum.FAILED,
+                    Message = ex.Message,
+                });
+            }
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetSimpleTeamListAjax()
+        {
+            try
+            {
                 List<TeamDto> teams = await _teamService.GetTeams();
 
                 return Json(new ResponseModel<List<TeamDto>>
