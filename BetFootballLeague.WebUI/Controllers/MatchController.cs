@@ -53,7 +53,6 @@ namespace BetFootballLeague.WebUI.Controllers
         {
             try
             {
-                //var xx = DateTime.ParseExact($"{request.Date} {request.Time}", "dd/MM/yyyy HH:mm", CultureInfo.CurrentCulture);
                 var round = await _roundService.GetRoundById(request.RoundId);
                 if (round == null)
                 {
@@ -154,7 +153,48 @@ namespace BetFootballLeague.WebUI.Controllers
                     });
                 }
 
-                //match.Name = request.Name;
+                var round = await _roundService.GetRoundById(request.RoundId);
+                if (round == null)
+                {
+                    return Json(new ResponseModel
+                    {
+                        Status = ResponseStatusEnum.SUCCEED,
+                        Message = "Round not found"
+                    });
+                }
+
+                if (request.Team1Id != null)
+                {
+                    var team1 = await _teamService.GetTeamById(request.Team1Id.Value);
+                    if (team1 == null)
+                    {
+                        return Json(new ResponseModel
+                        {
+                            Status = ResponseStatusEnum.SUCCEED,
+                            Message = "Team 1 not found"
+                        });
+                    }
+                }
+
+                if (request.Team2Id != null)
+                {
+                    var team2 = await _teamService.GetTeamById(request.Team2Id.Value);
+                    if (team2 == null)
+                    {
+                        return Json(new ResponseModel
+                        {
+                            Status = ResponseStatusEnum.SUCCEED,
+                            Message = "Team 2 not found"
+                        });
+                    }
+                }
+
+                match.IndexOrder = request.IndexOrder;
+                match.RoundId = request.RoundId;
+                match.Date = request.Date;
+                match.Time = request.Time;
+                match.Team1Id = request.Team1Id;
+                match.Team2Id = request.Team2Id;
                 await _matchService.UpdateMatch(match);
 
                 return Json(new ResponseModel

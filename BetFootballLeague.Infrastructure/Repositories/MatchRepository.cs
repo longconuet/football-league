@@ -20,6 +20,7 @@ namespace BetFootballLeague.Infrastructure.Repositories
                 .Include(x => x.Team1)
                 .Include(x => x.Team2)
                 .Include(x => x.Round)
+                .OrderBy(x => x.IndexOrder)
                 .ToListAsync();
         }
 

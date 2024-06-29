@@ -7,13 +7,13 @@
     setRoundDataForSelect();
 });
 
-function initDateTimePicker() {
-    $('.datepicker').datepicker({
+function initDateTimePicker(mode = '') {
+    $('#date' + mode).datepicker({
         uiLibrary: 'bootstrap5',
         format: 'dd/mm/yyyy'
     });
 
-    $('.timepicker').timepicker({
+    $('#time' + mode).timepicker({
         uiLibrary: 'bootstrap5'
     });
 }
@@ -245,18 +245,15 @@ function showEditModal(id) {
                 return;
             }
 
+            initDateTimePicker('-edit');
+
             let matchInfo = response.data;
             $('#update-match-id').val(id);
             $('#index-order-edit').val(matchInfo.indexOrder);
-            //$('#date-edit').val(matchInfo.date);
-            //$('#time-edit').val(matchInfo.time);
+            $('#date-edit').val(matchInfo.date);
+            $('#time-edit').val(matchInfo.time);
             $('#round-edit').val(matchInfo.roundId);
 
-            //$('.date-edit').datepicker({
-            //    uiLibrary: 'bootstrap5',
-            //    format: 'dd/mm/yyyy'
-            //});
-            //initDateTimePicker();
             if (matchInfo.team1Id != null) {
                 $('#team1-edit').val(matchInfo.team1Id).trigger('change');
             }

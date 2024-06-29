@@ -25,12 +25,19 @@ namespace BetFootballLeague.Application.Mappings
             CreateMap<CreateTeamRequestDto, Team>();
             CreateMap<UpdateTeamRequestDto, Team>();
 
-            CreateMap<LeagueMatch, MatchDto>();
+            CreateMap<LeagueMatch, MatchDto>()
+                .ForMember(dest => dest.Date, opt => opt.MapFrom(src => src.Date.ToString("dd/MM/yyyy")))
+                .ForMember(dest => dest.Time, opt => opt.MapFrom(src => src.Time.ToString("HH:mm")))
+                .ForMember(dest => dest.DateTime, opt => opt.MapFrom(src => src.DateTime.ToString("HH:mm dd/MM/yyyy")));
             CreateMap<CreateMatchRequestDto, LeagueMatch>()
                 .ForMember(dest => dest.Date, opt => opt.MapFrom(src => DateOnly.ParseExact(src.Date, "dd/MM/yyyy")))
                 .ForMember(dest => dest.Time, opt => opt.MapFrom(src => TimeOnly.ParseExact(src.Time, "HH:mm")))
                 .ForMember(dest => dest.DateTime, opt => opt.MapFrom(src => DateTime.ParseExact($"{src.Date} {src.Time}", "dd/MM/yyyy HH:mm", CultureInfo.CurrentCulture)));
             CreateMap<UpdateMatchRequestDto, LeagueMatch>()
+                .ForMember(dest => dest.Date, opt => opt.MapFrom(src => DateOnly.ParseExact(src.Date, "dd/MM/yyyy")))
+                .ForMember(dest => dest.Time, opt => opt.MapFrom(src => TimeOnly.ParseExact(src.Time, "HH:mm")))
+                .ForMember(dest => dest.DateTime, opt => opt.MapFrom(src => DateTime.ParseExact($"{src.Date} {src.Time}", "dd/MM/yyyy HH:mm", CultureInfo.CurrentCulture)));
+            CreateMap<MatchDto, LeagueMatch>()
                 .ForMember(dest => dest.Date, opt => opt.MapFrom(src => DateOnly.ParseExact(src.Date, "dd/MM/yyyy")))
                 .ForMember(dest => dest.Time, opt => opt.MapFrom(src => TimeOnly.ParseExact(src.Time, "HH:mm")))
                 .ForMember(dest => dest.DateTime, opt => opt.MapFrom(src => DateTime.ParseExact($"{src.Date} {src.Time}", "dd/MM/yyyy HH:mm", CultureInfo.CurrentCulture)));

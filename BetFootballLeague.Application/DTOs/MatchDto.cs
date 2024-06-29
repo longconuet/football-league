@@ -6,9 +6,9 @@ namespace BetFootballLeague.Application.DTOs
     {
         public Guid? GroupId { get; set; }
         public Guid RoundId { get; set; }
-        public DateOnly Date { get; set; }
-        public TimeOnly Time { get; set; }
-        public DateTime DateTime { get; set; }
+        public string Date { get; set; }
+        public string Time { get; set; }
+        public string DateTime { get; set; }
         public int IndexOrder { get; set; }
         public Guid? Team1Id { get; set; }
         public Guid? Team2Id { get; set; }
