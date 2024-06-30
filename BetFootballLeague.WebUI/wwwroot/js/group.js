@@ -55,7 +55,7 @@ function getGroupList() {
             $('#group-table-data').html(tableHtml);
         },
         error: function (error) {
-            toastr.error('Error', error)
+            toastr.error(error, 'Error')
         }
     });
 }
@@ -90,7 +90,7 @@ function submitCreateGroup() {
             clearCreateModalInput();
         },
         error: function (error) {
-            toastr.error('Error', error)
+            toastr.error(error, 'Error')
         }
     });
 }
@@ -116,7 +116,7 @@ function showEditModal(id) {
         },
         error: function (error) {
             $('#update-group-id').val('');
-            toastr.error('Error', error)
+            toastr.error(error, 'Error')
         }
     });
 }
@@ -147,7 +147,7 @@ function submitUpdateGroup() {
             $('#edit-group-modal').modal('hide');
         },
         error: function (error) {
-            toastr.error('Error', error)
+            toastr.error(error, 'Error')
         }
     });
 }
@@ -177,7 +177,7 @@ function submitDeleteGroup() {
             $('#delete-group-modal').modal('hide');
         },
         error: function (error) {
-            toastr.error('Error', error)
+            toastr.error(error, 'Error')
         }
     });
 }

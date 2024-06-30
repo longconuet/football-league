@@ -1,0 +1,46 @@
+﻿<div class="modal fade" id="create-match-modal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="createMatchModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="createMatchModalLabel">Add match</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="mb-3">
+                    <label for="index-order" class="form-label">No</label>
+                    <input type="number" class="form-control" id="index-order" placeholder="" />
+                </div>
+                <div class="mb-3">
+                    <label for="date" class="form-label">Date</label>
+                    <input class="form-control datepicker" id="date" placeholder="" />
+                </div>
+                <div class="mb-3">
+                    <label for="time" class="form-label">Time</label>
+                    <input class="form-control timepicker" id="time" placeholder="" />
+                </div>
+                <div class="mb-3">
+                    <label for="round" class="form-label">Round</label>
+                    <select class="form-select" aria-label="Round" id="round">
+                        <option value="">Select Round...</option>
+                    </select>
+                </div>
+                <div class="mb-3">
+                    <label for="team1" class="form-label">Team 1</label>
+                    <select class="form-select select2-team" aria-label="Team 1" id="team1" style="width: 100%">
+                        <option></option>
+                    </select>
+                </div>
+                <div class="mb-3">
+                    <label for="team2" class="form-label">Team 2</label>
+                    <select class="form-select select2-team" aria-label="Team 2" id="team2" style="width: 100%">
+                        <option></option>
+                    </select>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" onclick="submitCreateMatch()">Save</button>
+            </div>
+        </div>
+    </div>
+</div>

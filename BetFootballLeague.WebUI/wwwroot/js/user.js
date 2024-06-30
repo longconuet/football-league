@@ -50,7 +50,7 @@ function getUserList() {
             $('#user-table-data').html(tableHtml);
         },
         error: function (error) {
-            toastr.error('Error', error)
+            toastr.error(error, 'Error')
         }
     });
 }
@@ -103,7 +103,7 @@ function submitCreateUser() {
             clearCreateModalInput();
         },
         error: function (error) {
-            toastr.error('Error', error)
+            toastr.error(error, 'Error')
         }
     });
 }
@@ -131,7 +131,7 @@ function showEditModal(id) {
         },
         error: function (error) {
             $('#update-user-id').val('');
-            toastr.error('Error', error)
+            toastr.error(error, 'Error')
         }
     });
 }
@@ -164,7 +164,7 @@ function submitUpdateUser() {
             $('#edit-user-modal').modal('hide');
         },
         error: function (error) {
-            toastr.error('Error', error)
+            toastr.error(error, 'Error')
         }
     });
 }
@@ -194,7 +194,7 @@ function submitDeleteUser() {
             $('#delete-user-modal').modal('hide');
         },
         error: function (error) {
-            toastr.error('Error', error)
+            toastr.error(error, 'Error')
         }
     });
 }
@@ -237,7 +237,7 @@ function submitUpdateUserStatus() {
             $('#update-status-user-modal').modal('hide');
         },
         error: function (error) {
-            toastr.error('Error', error)
+            toastr.error(error, 'Error')
         }
     });
 }

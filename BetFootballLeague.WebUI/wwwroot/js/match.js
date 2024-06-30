@@ -71,7 +71,7 @@ function setTeamDataForSelect2() {
             });
         },
         error: function (error) {
-            toastr.error('Error', error)
+            toastr.error(error, 'Error')
         }
     });
 
@@ -104,7 +104,7 @@ function setRoundDataForSelect() {
             $('#round-edit').html(selectHtmml);
         },
         error: function (error) {
-            toastr.error('Error', error)
+            toastr.error(error, 'Error')
         }
     });
 }
@@ -133,32 +133,65 @@ function getMatchList() {
                     tableHtml += '<td>' + match.time + '</td>';
                     tableHtml += '<td>' + match.round.name + '</td>';
 
+                    // team 1
                     tableHtml += '<td>';
                     if (match.team1) {
                         tableHtml += '<div>';
-                        tableHtml += `<span><img src="${match.team1.image}" style="max-width: 50px; max-height: 50px;" alter="img" title="img"></span>`;
+                        tableHtml += `<span><img src="${match.team1.image}" style="max-width: 50px; max-height: 50px;" alter="img" title="${match.team1.name}"></span>`;
                         tableHtml += `<span class="m-2">${match.team1.name}</span>`;
                         tableHtml += '</div>';
+
+                        if (match.upperDoorTeamId && match.upperDoorTeamId == match.team1Id) {
+                            tableHtml += `<div><span class="badge rounded-pill bg-success mt-2">Odds: ${match.odds}</span></div>`;
+                        }
+                    }
+                    else {
+                        tableHtml += '<div class="text-center">?</div>';
                     }
                     tableHtml += '</td>';
 
+                    // team 2
                     tableHtml += '<td>';
                     if (match.team2) {
                         tableHtml += '<div>';
-                        tableHtml += `<span><img src="${match.team2.image}" style="max-width: 50px; max-height: 50px;" alter="img" title="img"></span>`;
+                        tableHtml += `<span><img src="${match.team2.image}" style="max-width: 50px; max-height: 50px;" alter="img" title="${match.team2.name}"></span>`;
                         tableHtml += `<span class="m-2">${match.team2.name}</span>`;
                         tableHtml += '</div>';
+
+                        if (match.upperDoorTeamId && match.upperDoorTeamId == match.team2Id) {
+                            tableHtml += `<div><span class="badge rounded-pill bg-success mt-2">Odds: ${match.odds}</span></div>`;
+                        }
                     }
                     else {
-                        tableHtml += '<div class="text-center>?</div>';
+                        tableHtml += '<div class="text-center">?</div>';
                     }
                     tableHtml += '</td>';
                     tableHtml += '<td>' + getStatusLabel(match.betStatus) + '</td>';
 
-                    let editBtnHtml = `<button type="button" class="btn btn-primary m-1" onClick="showEditModal('${match.id}')"><i class="bi bi-pencil-fill"></i> Edit</button>`;
-                    let deleteBtnHtml = `<button type="button" class="btn btn-danger" onClick="showDeleteModal('${match.id}')"><i class="bi bi-trash-fill"></i> Delete</button>`;
+                    // score
+                    tableHtml += '<td class="text-center">';
+                    if (match.team1Score && match.team2Score) {
+                        tableHtml += `<span class="m-2">${match.team1Score} - ${match.team2Score}</span>`;
+                    }
+                    tableHtml += '</td>';
 
-                    tableHtml += '<td>' + editBtnHtml + deleteBtnHtml + '</td>';
+                    // odds button
+                    let setOddsBtnHtml = '';
+                    if (match.team1 && match.team2 && match.betStatus == 0) {
+                        setOddsBtnHtml = `<button type="button" class="btn btn-info m-1" onClick="showSetOddsModal('${match.id}')" title="Set odds"><i class="bi bi-arrow-bar-up"></i></button>`;
+                    }
+
+                    // score button
+                    let updateScoreBtnHtml = '';
+                    if (match.betStatus == 1) {
+                        updateScoreBtnHtml = `<button type="button" class="btn btn-success m-1" onClick="showUpdateScoreModal('${match.id}')" title="Update score"><i class="bi bi-caret-right-square"></i></button>`;
+                    }
+
+                    let updateStatusBtnHtml = `<button type="button" class="btn btn-primary m-1" onClick="showUpdateStatusModal('${match.id}')" title="Update status"><i class="bi bi-arrow-left-right"></i></button>`;
+                    let editBtnHtml = `<button type="button" class="btn btn-primary m-1" onClick="showEditModal('${match.id}')" title="Edit"><i class="bi bi-pencil-fill"></i></button>`;
+                    let deleteBtnHtml = `<button type="button" class="btn btn-danger" onClick="showDeleteModal('${match.id}')" title="Delete"><i class="bi bi-trash-fill"></i></button>`;
+
+                    tableHtml += '<td>' + setOddsBtnHtml + updateStatusBtnHtml + updateScoreBtnHtml + editBtnHtml + deleteBtnHtml + '</td>';
                     tableHtml += '</tr>';
                 });
             }
@@ -169,7 +202,7 @@ function getMatchList() {
             $('#match-table-data').html(tableHtml);
         },
         error: function (error) {
-            toastr.error('Error', error)
+            toastr.error(error, 'Error')
         }
     });
 }
@@ -226,7 +259,7 @@ function submitCreateMatch() {
             clearCreateModalInput();
         },
         error: function (error) {
-            toastr.error('Error', error)
+            toastr.error(error, 'Error')
         }
     });
 }
@@ -265,7 +298,7 @@ function showEditModal(id) {
         },
         error: function (error) {
             $('#update-match-id').val('');
-            toastr.error('Error', error)
+            toastr.error(error, 'Error')
         }
     });
 }
@@ -301,7 +334,7 @@ function submitUpdateMatch() {
             $('#edit-match-modal').modal('hide');
         },
         error: function (error) {
-            toastr.error('Error', error)
+            toastr.error(error, 'Error')
         }
     });
 }
@@ -331,7 +364,260 @@ function submitDeleteMatch() {
             $('#delete-match-modal').modal('hide');
         },
         error: function (error) {
-            toastr.error('Error', error)
+            toastr.error(error, 'Error')
+        }
+    });
+}
+
+function showSetOddsModal(id) {
+    $.ajax({
+        type: "GET",
+        url: '/Match/GetMatchInfoAjax/' + id,
+        contentType: 'application/json',
+        headers: {
+            'RequestVerificationToken': token
+        },
+        success: function (response) {
+            if (response.status == 0) {
+                toastr.error(response.message, 'Error');
+                return;
+            }
+
+            let matchInfo = response.data;
+            $('#set-odds-match-id').val(id);
+            $('#odds').val(matchInfo.odds);
+            $('#upper-door-team1').val(matchInfo.team1Id);
+            $('#upper-door-team2').val(matchInfo.team2Id);
+            $('#odds-team1-label').html(`<img src="${matchInfo.team1.image}" style="max-width: 50px; max-height: 50px;" alter="img" title="img"><span>${matchInfo.team1.name}</span>`);
+            $('#odds-team2-label').html(`<img src="${matchInfo.team2.image}" style="max-width: 50px; max-height: 50px;" alter="img" title="img"><span>${matchInfo.team2.name}</span>`);
+
+            if (matchInfo.upperDoorTeamId) {
+                if (matchInfo.upperDoorTeamId == matchInfo.team1Id) {
+                    $('#upper-door-team1').prop('checked', true);
+                    $('#upper-door-team2').prop('checked', false);
+                }
+                else { 
+                    $('#upper-door-team1').prop('checked', false);
+                    $('#upper-door-team2').prop('checked', true);
+                }
+            }
+            else {
+                $('#upper-door-team1').prop('checked', false);
+                $('#upper-door-team2').prop('checked', false);
+            }
+            setOddsTeamLabel();
+
+            $('#set-odds-match-modal').modal('show');
+        },
+        error: function (error) {
+            $('#set-odds-match-id').val('');
+            toastr.error(error, 'Error')
+        }
+    });
+}
+
+$('#set-odds-match-modal input[name="upperDoorTeam"]').on('click', function () {
+    setOddsTeamLabel();
+});
+
+function setOddsTeamLabel() {
+    $('#set-odds-match-modal input[name="upperDoorTeam"]').each(function () {
+        if ($(this).prop('checked') == false) {
+            $(this).parent().removeClass('checked-odds-team');
+            $(this).parent().addClass('unchecked-odds-team');
+        }
+        else {
+            $(this).parent().removeClass('unchecked-odds-team');
+            $(this).parent().addClass('checked-odds-team');
+        }
+    });
+}
+
+function submitSetOddsMatch() {
+    var checkedTeamId = $('#set-odds-match-modal input[name="upperDoorTeam"]:checked').val();
+    if (!checkedTeamId) {
+        toastr.error('Please select a team', 'Error');
+        return;
+    }
+
+    var data = {
+        Id: $('#set-odds-match-id').val(),
+        Odds: $('#odds').val(),
+        UpperDoorTeamId: checkedTeamId
+    };
+
+    $.ajax({
+        url: '/Match/SetOddsMatchAjax',
+        data: JSON.stringify(data),
+        type: "POST",
+        contentType: "application/json;charset=utf-8",
+        dataType: "json",
+        headers: {
+            'RequestVerificationToken': token
+        },
+        success: function (response) {
+            if (response.status == 0) {
+                toastr.error(response.message, 'Error');
+                return;
+            }
+
+            toastr.success(response.message, 'Success');
+            getMatchList();
+            $('#set-odds-match-modal').modal('hide');
+        },
+        error: function (error) {
+            toastr.error(error, 'Error')
+        }
+    });
+}
+
+function showUpdateStatusModal(id) {
+    $.ajax({
+        type: "GET",
+        url: '/Match/GetMatchInfoAjax/' + id,
+        contentType: 'application/json',
+        headers: {
+            'RequestVerificationToken': token
+        },
+        success: function (response) {
+            if (response.status == 0) {
+                toastr.error(response.message, 'Error');
+                return;
+            }
+
+            let matchInfo = response.data;
+            let currentStatus = matchInfo.betStatus;
+            $('#update-status-match-id').val(id);
+
+            $('#update-status-match-modal input[name="statusUpdate"]').prop('disabled', false).prop('checked', false);
+            $('#status-update-' + currentStatus).prop('disabled', true).prop('checked', true);
+
+            if (currentStatus == 0 && (!matchInfo.team1Id || !matchInfo.team2Id || !matchInfo.odds)) {
+                $('#status-update-1').prop('disabled', true);
+                $('#status-update-2').prop('disabled', true);
+            }
+
+            if (currentStatus == 1 && !matchInfo.team1Score) {
+                $('#status-update-0').prop('disabled', true);
+                $('#status-update-2').prop('disabled', true);
+            }
+
+            if (currentStatus == 2) {
+                $('#status-update-0').prop('disabled', true);
+            }
+
+            $('#update-status-match-modal').modal('show');
+        },
+        error: function (error) {
+            $('#update-status-match-id').val('');
+            toastr.error(error, 'Error')
+        }
+    });
+}
+
+function submitUpdateStatusMatch() {
+    var checkedStatusItem = $('#update-status-match-modal input[name="statusUpdate"]:checked');
+    if (!checkedStatusItem.val() || checkedStatusItem.prop('disabled') == true) {
+        toastr.error('Please select a status', 'Error');
+        return;
+    }
+
+    var data = {
+        Id: $('#update-status-match-id').val(),
+        BetStatus: parseInt(checkedStatusItem.val())
+    };
+
+    $.ajax({
+        url: '/Match/UpdateMatchStatusAjax',
+        data: JSON.stringify(data),
+        type: "POST",
+        contentType: "application/json;charset=utf-8",
+        dataType: "json",
+        headers: {
+            'RequestVerificationToken': token
+        },
+        success: function (response) {
+            if (response.status == 0) {
+                toastr.error(response.message, 'Error');
+                return;
+            }
+
+            toastr.success(response.message, 'Success');
+            getMatchList();
+            $('#update-status-match-modal').modal('hide');
+        },
+        error: function (error) {
+            toastr.error(error, 'Error')
+        }
+    });
+}
+
+function showUpdateScoreModal(id) {
+    $.ajax({
+        type: "GET",
+        url: '/Match/GetMatchInfoAjax/' + id,
+        contentType: 'application/json',
+        headers: {
+            'RequestVerificationToken': token
+        },
+        success: function (response) {
+            if (response.status == 0) {
+                toastr.error(response.message, 'Error');
+                return;
+            }
+
+            let matchInfo = response.data;
+            $('#update-score-match-id').val(id);
+
+            $('#score-team1-name').html(matchInfo.team1.name);
+            $('#score-team1-img').attr('src', matchInfo.team1.image);
+            $('#score-team2-name').html(matchInfo.team2.name);
+            $('#score-team2-img').attr('src', matchInfo.team2.image);
+
+            if (matchInfo.team1Score) {
+                $('#score-team1').val(matchInfo.team1Score);
+            }
+            if (matchInfo.team2Score) {
+                $('#score-team2').val(matchInfo.team2Score);
+            }
+
+            $('#update-score-match-modal').modal('show');
+        },
+        error: function (error) {
+            $('#update-score-match-id').val('');
+            toastr.error(error, 'Error')
+        }
+    });
+}
+
+function submitUpdateScoreMatch() {
+    var data = {
+        Id: $('#update-score-match-id').val(),
+        Team1Score: parseInt($('#score-team1').val()),
+        Team2Score: parseInt($('#score-team2').val())
+    };
+
+    $.ajax({
+        url: '/Match/UpdateMatchScoreAjax',
+        data: JSON.stringify(data),
+        type: "POST",
+        contentType: "application/json;charset=utf-8",
+        dataType: "json",
+        headers: {
+            'RequestVerificationToken': token
+        },
+        success: function (response) {
+            if (response.status == 0) {
+                toastr.error(response.message, 'Error');
+                return;
+            }
+
+            toastr.success(response.message, 'Success');
+            getMatchList();
+            $('#update-score-match-modal').modal('hide');
+        },
+        error: function (error) {
+            toastr.error(error, 'Error')
         }
     });
 }

@@ -1,0 +1,40 @@
+﻿<div class="modal fade" id="update-status-match-modal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="updateStatusMatchModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <input type="hidden" id="update-status-match-id" value="" />
+            <div class="modal-header">
+                <h5 class="modal-title" id="updateStatusMatchModalLabel">Update match status</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="mb-3">
+                    <label for="odds" class="form-label">Choose status</label>
+                    <div id="status-update-div">
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="statusUpdate" id="status-update-0" value="0">
+                            <label class="form-check-label" for="status-update-0" id="status-update-0-label">
+                                <span class="badge bg-danger">Not allowed to bet</span>
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="statusUpdate" id="status-update-1" value="1">
+                            <label class="form-check-label" for="status-update-1">
+                                <span class="badge bg-success">Opening</span>
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="statusUpdate" id="status-update-2" value="2">
+                            <label class="form-check-label" for="status-update-2">
+                                <span class="badge bg-secondary">Closed</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" onclick="submitUpdateStatusMatch()">Update</button>
+            </div>
+        </div>
+    </div>
+</div>

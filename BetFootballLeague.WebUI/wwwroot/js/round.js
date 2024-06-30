@@ -42,7 +42,7 @@ function getRoundList() {
             $('#round-table-data').html(tableHtml);
         },
         error: function (error) {
-            toastr.error('Error', error)
+            toastr.error(error, 'Error')
         }
     });
 }
@@ -80,7 +80,7 @@ function submitCreateRound() {
             clearCreateModalInput();
         },
         error: function (error) {
-            toastr.error('Error', error)
+            toastr.error(error, 'Error')
         }
     });
 }
@@ -108,7 +108,7 @@ function showEditModal(id) {
         },
         error: function (error) {
             $('#update-round-id').val('');
-            toastr.error('Error', error)
+            toastr.error(error, 'Error')
         }
     });
 }
@@ -141,7 +141,7 @@ function submitUpdateRound() {
             $('#edit-round-modal').modal('hide');
         },
         error: function (error) {
-            toastr.error('Error', error)
+            toastr.error(error, 'Error')
         }
     });
 }
@@ -171,7 +171,7 @@ function submitDeleteRound() {
             $('#delete-round-modal').modal('hide');
         },
         error: function (error) {
-            toastr.error('Error', error)
+            toastr.error(error, 'Error')
         }
     });
 }

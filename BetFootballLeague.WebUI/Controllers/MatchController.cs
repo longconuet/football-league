@@ -245,5 +245,182 @@ namespace BetFootballLeague.WebUI.Controllers
                 });
             }
         }
+
+        [HttpPost]
+        public async Task<IActionResult> SetOddsMatchAjax([FromBody] SetOddsMatchRequestDto request)
+        {
+            try
+            {
+                MatchDto? match = await _matchService.GetMatchById(request.Id);
+                if (match == null)
+                {
+                    return Json(new ResponseModel<MatchDto>
+                    {
+                        Status = ResponseStatusEnum.FAILED,
+                        Message = "Match not found"
+                    });
+                }
+
+                if (match.BetStatus == MatchBetStatusEnum.OPENING || match.BetStatus == MatchBetStatusEnum.IS_CLOSED)
+                {
+                    return Json(new ResponseModel<MatchDto>
+                    {
+                        Status = ResponseStatusEnum.FAILED,
+                        Message = "Can not set odds"
+                    });
+                }
+
+                if (match.Team1Id == null || match.Team2Id == null)
+                {
+                    return Json(new ResponseModel<MatchDto>
+                    {
+                        Status = ResponseStatusEnum.FAILED,
+                        Message = "Team match is not set"
+                    });
+                }
+
+                if (request.UpperDoorTeamId != match.Team1Id && request.UpperDoorTeamId != match.Team2Id)
+                {
+                    return Json(new ResponseModel<MatchDto>
+                    {
+                        Status = ResponseStatusEnum.FAILED,
+                        Message = "Invalid team"
+                    });
+                }
+
+                match.Odds = request.Odds;
+                match.UpperDoorTeamId = request.Odds != null ? request.UpperDoorTeamId : null;
+                await _matchService.UpdateMatch(match);
+
+                return Json(new ResponseModel
+                {
+                    Status = ResponseStatusEnum.SUCCEED,
+                    Message = "Update match successfully"
+                });
+            }
+            catch (Exception ex)
+            {
+                return Json(new ResponseModel
+                {
+                    Status = ResponseStatusEnum.FAILED,
+                    Message = ex.Message,
+                });
+            }
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> UpdateMatchStatusAjax([FromBody] UpdateMatchBetStatusRequestDto request)
+        {
+            try
+            {
+                if (!Enum.IsDefined(typeof(MatchBetStatusEnum), request.BetStatus))
+                {
+                    return Json(new ResponseModel<MatchDto>
+                    {
+                        Status = ResponseStatusEnum.FAILED,
+                        Message = "Invalid status"
+                    });
+                }
+                var newStatus = (MatchBetStatusEnum)request.BetStatus;
+
+                MatchDto? match = await _matchService.GetMatchById(request.Id);
+                if (match == null)
+                {
+                    return Json(new ResponseModel<MatchDto>
+                    {
+                        Status = ResponseStatusEnum.FAILED,
+                        Message = "Match not found"
+                    });
+                }
+                var oldStatus = match.BetStatus;
+
+                bool invalidCondition1 = (newStatus == MatchBetStatusEnum.OPENING || newStatus == MatchBetStatusEnum.IS_CLOSED)
+                    && (match.Team1Id == null || match.Team2Id == null || match.Odds == null);
+                bool invalidCondition2 = newStatus == MatchBetStatusEnum.NOT_ALLOWED && (oldStatus == MatchBetStatusEnum.OPENING || oldStatus == MatchBetStatusEnum.IS_CLOSED);
+                if (invalidCondition1 || invalidCondition2)
+                {
+                    return Json(new ResponseModel<MatchDto>
+                    {
+                        Status = ResponseStatusEnum.FAILED,
+                        Message = "Can not change status"
+                    });
+                }
+
+                if (newStatus == MatchBetStatusEnum.IS_CLOSED && (match.Team1Score == null || match.Team2Score == null))
+                {
+                    return Json(new ResponseModel<MatchDto>
+                    {
+                        Status = ResponseStatusEnum.FAILED,
+                        Message = "The score has not been updated yet"
+                    });
+                }
+
+                if (newStatus == MatchBetStatusEnum.IS_CLOSED)
+                {
+
+                }
+
+                match.BetStatus = newStatus;
+                await _matchService.UpdateMatch(match);
+
+                return Json(new ResponseModel
+                {
+                    Status = ResponseStatusEnum.SUCCEED,
+                    Message = "Update status successfully"
+                });
+            }
+            catch (Exception ex)
+            {
+                return Json(new ResponseModel
+                {
+                    Status = ResponseStatusEnum.FAILED,
+                    Message = ex.Message,
+                });
+            }
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> UpdateMatchScoreAjax([FromBody] UpdateMatchScoreRequestDto request)
+        {
+            try
+            {
+                MatchDto? match = await _matchService.GetMatchById(request.Id);
+                if (match == null)
+                {
+                    return Json(new ResponseModel<MatchDto>
+                    {
+                        Status = ResponseStatusEnum.FAILED,
+                        Message = "Match not found"
+                    });
+                }
+
+                if (match.BetStatus != MatchBetStatusEnum.OPENING)
+                {
+                    return Json(new ResponseModel<MatchDto>
+                    {
+                        Status = ResponseStatusEnum.FAILED,
+                        Message = "Can not update score"
+                    });
+                }
+
+                match.Team1Score = request.Team1Score;
+                match.Team2Score = request.Team2Score;
+                await _matchService.UpdateMatch(match);
+
+                return Json(new ResponseModel
+                {
+                    Status = ResponseStatusEnum.SUCCEED,
+                    Message = "Update score successfully"
+                });
+            }
+            catch (Exception ex)
+            {
+                return Json(new ResponseModel
+                {
+                    Status = ResponseStatusEnum.FAILED,
+                    Message = ex.Message,
+                });
+            }
+        }
     }
 }

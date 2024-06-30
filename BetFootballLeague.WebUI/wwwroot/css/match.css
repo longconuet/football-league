@@ -1,0 +1,28 @@
+.checked-odds-team {
+    background: aquamarine;
+}
+
+.unchecked-odds-team {
+    background: #dddddd;
+}
+
+.odds-team {
+    border-radius: 10px;
+}
+
+.odds-team > label {
+    margin: 15px;
+}
+
+.odds-team > label > img {
+    margin-right: 10px;
+}
+
+.odds-team > input {
+    margin-top: 31px;
+    margin-left: 0px !important;
+}
+
+.score-team {
+
+}

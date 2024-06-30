@@ -26,7 +26,11 @@ namespace BetFootballLeague.Infrastructure.Repositories
 
         public async Task<LeagueMatch?> GetMatchByIdAsync(Guid id)
         {
-            return await _context.Matches.AsNoTracking().FirstOrDefaultAsync(x => x.Id == id);
+            return await _context.Matches
+                .Include(x => x.Team1)
+                .Include(x => x.Team2)
+                .AsNoTracking()
+                .FirstOrDefaultAsync(x => x.Id == id);
         }
 
         public async Task AddMatchAsync(LeagueMatch match)

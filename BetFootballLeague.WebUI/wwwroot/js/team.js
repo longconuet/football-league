@@ -31,7 +31,7 @@ function getGroupList() {
             }            
         },
         error: function (error) {
-            toastr.error('Error', error)
+            toastr.error(error, 'Error')
         }
     });
 }
@@ -73,7 +73,7 @@ function getTeamList() {
             $('#team-table-data').html(tableHtml);
         },
         error: function (error) {
-            toastr.error('Error', error)
+            toastr.error(error, 'Error')
         }
     });
 }
@@ -115,7 +115,7 @@ function submitCreateTeam() {
             clearCreateModalInput();
         },
         error: function (error) {
-            toastr.error('Error', error)
+            toastr.error(error, 'Error')
         }
     });
 }
@@ -144,7 +144,7 @@ function showEditModal(id) {
         },
         error: function (error) {
             $('#update-team-id').val('');
-            toastr.error('Error', error)
+            toastr.error(error, 'Error')
         }
     });
 }
@@ -182,7 +182,7 @@ function submitUpdateTeam() {
             $('#edit-team-modal').modal('hide');
         },
         error: function (error) {
-            toastr.error('Error', error)
+            toastr.error(error, 'Error')
         }
     });
 }
@@ -212,7 +212,7 @@ function submitDeleteTeam() {
             $('#delete-team-modal').modal('hide');
         },
         error: function (error) {
-            toastr.error('Error', error)
+            toastr.error(error, 'Error')
         }
     });
 }
