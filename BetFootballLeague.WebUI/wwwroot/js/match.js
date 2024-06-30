@@ -142,7 +142,10 @@ function getMatchList() {
                         tableHtml += '</div>';
 
                         if (match.upperDoorTeamId && match.upperDoorTeamId == match.team1Id) {
-                            tableHtml += `<div><span class="badge rounded-pill bg-success mt-2">Odds: ${match.odds}</span></div>`;
+                            tableHtml += `<span class="badge rounded-pill bg-info mt-2 me-2">Odds: ${match.odds}</span>`;
+                        }
+                        if (match.winBetTeamId && match.winBetTeamId == match.team1Id) {
+                            tableHtml += `<span class="badge rounded-pill bg-success mt-2 me-2">Win Bet</span>`;
                         }
                     }
                     else {
@@ -159,7 +162,10 @@ function getMatchList() {
                         tableHtml += '</div>';
 
                         if (match.upperDoorTeamId && match.upperDoorTeamId == match.team2Id) {
-                            tableHtml += `<div><span class="badge rounded-pill bg-success mt-2">Odds: ${match.odds}</span></div>`;
+                            tableHtml += `<span class="badge rounded-pill bg-info mt-2 me-2">Odds: ${match.odds}</span>`;
+                        }
+                        if (match.winBetTeamId && match.winBetTeamId == match.team2Id) {
+                            tableHtml += `<span class="badge rounded-pill bg-success mt-2 me-2">Win Bet</span>`;
                         }
                     }
                     else {
@@ -191,7 +197,7 @@ function getMatchList() {
                     let editBtnHtml = `<button type="button" class="btn btn-primary m-1" onClick="showEditModal('${match.id}')" title="Edit"><i class="bi bi-pencil-fill"></i></button>`;
                     let deleteBtnHtml = `<button type="button" class="btn btn-danger" onClick="showDeleteModal('${match.id}')" title="Delete"><i class="bi bi-trash-fill"></i></button>`;
 
-                    tableHtml += '<td>' + setOddsBtnHtml + updateStatusBtnHtml + updateScoreBtnHtml + editBtnHtml + deleteBtnHtml + '</td>';
+                    tableHtml += '<td>' + setOddsBtnHtml + updateScoreBtnHtml + updateStatusBtnHtml + editBtnHtml + deleteBtnHtml + '</td>';
                     tableHtml += '</tr>';
                 });
             }

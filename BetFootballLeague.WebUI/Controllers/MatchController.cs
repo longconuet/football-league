@@ -355,9 +355,24 @@ namespace BetFootballLeague.WebUI.Controllers
                     });
                 }
 
+                // update team win bet when match ended
                 if (newStatus == MatchBetStatusEnum.IS_CLOSED)
                 {
+                    if (match.Team1Score > match.Team2Score)
+                    {
+                        var diff = match.Team1Score - match.Team2Score;
+                        match.WinBetTeamId = diff > match.Odds ? match.Team1Id : match.Team2Id;
+                    }
+                    else
+                    {
+                        var diff = match.Team2Score - match.Team1Score;
+                        match.WinBetTeamId = diff > match.Odds ? match.Team2Id : match.Team1Id;
+                    }
+                }
 
+                if (oldStatus == MatchBetStatusEnum.IS_CLOSED && newStatus == MatchBetStatusEnum.OPENING)
+                {
+                    match.WinBetTeamId = null;
                 }
 
                 match.BetStatus = newStatus;
