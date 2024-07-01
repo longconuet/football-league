@@ -43,9 +43,19 @@ namespace BetFootballLeague.Infrastructure.Repositories
             return await _context.Users.AsNoTracking().FirstOrDefaultAsync(x => x.Id == id);
         }
 
-        public async Task<User?> GetUserByPhoneOrEmailAsync(string input)
+        public async Task<User?> GetUserByPhoneAsync(string input)
         {
-            return await _context.Users.AsNoTracking().FirstOrDefaultAsync(x => x.Phone == input || x.Email == input);
+            return await _context.Users.AsNoTracking().FirstOrDefaultAsync(x => x.Phone == input);
+        }
+
+        public async Task<User?> GetUserByEmailAsync(string input)
+        {
+            return await _context.Users.AsNoTracking().FirstOrDefaultAsync(x => x.Email == input);
+        }
+
+        public async Task<User?> GetUserByUsernameAsync(string input)
+        {
+            return await _context.Users.AsNoTracking().FirstOrDefaultAsync(x => x.Username == input);
         }
 
         public async Task UpdateUserAsync(User user)

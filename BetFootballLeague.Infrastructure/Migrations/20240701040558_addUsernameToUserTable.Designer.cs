@@ -4,6 +4,7 @@ using BetFootballLeague.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BetFootballLeague.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240701040558_addUsernameToUserTable")]
+    partial class addUsernameToUserTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -221,10 +224,6 @@ namespace BetFootballLeague.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Password")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("Phone")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -255,12 +254,11 @@ namespace BetFootballLeague.Infrastructure.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("dafd1b20-467d-4a7e-b5fe-2363630bc82e"),
-                            CreatedAt = new DateTime(2024, 7, 1, 11, 47, 16, 299, DateTimeKind.Local).AddTicks(1780),
+                            Id = new Guid("b13c9938-761c-4cc0-b3ae-9bba860cb653"),
+                            CreatedAt = new DateTime(2024, 7, 1, 11, 5, 58, 102, DateTimeKind.Local).AddTicks(6734),
                             CreatedBy = new Guid("00000000-0000-0000-0000-000000000000"),
                             Email = "nice231096@gmail.com",
                             FullName = "Nguyen Thanh Long",
-                            Password = "$2a$13$NU07JmDn59tiROerrINhOeVHBFGpwxYfzFziyTYvO3Xb5lFMhvlxW",
                             Phone = "0348523140",
                             Point = 0,
                             Role = 0,

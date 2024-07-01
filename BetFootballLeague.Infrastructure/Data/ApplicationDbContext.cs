@@ -1,5 +1,6 @@
 ﻿using BetFootballLeague.Domain.Entities;
 using BetFootballLeague.Infrastructure.FluentConfigurations;
+using BetFootballLeague.Shared.Helpers;
 using Microsoft.EntityFrameworkCore;
 
 namespace BetFootballLeague.Infrastructure.Data
@@ -26,12 +27,14 @@ namespace BetFootballLeague.Infrastructure.Data
         {
             // config user
             modelBuilder.ApplyConfiguration(new User_FluentConfiguration());
-            modelBuilder.Entity<User>().HasData(new User 
-            { 
+            modelBuilder.Entity<User>().HasData(new User
+            {
                 Id = Guid.NewGuid(),
                 FullName = "Nguyen Thanh Long",
                 Email = "nice231096@gmail.com",
                 Phone = "0348523140",
+                Username = "admin",
+                Password = PasswordHelper.HashPasword("admin123"),
                 Role = Shared.Enums.RoleEnum.ADMIN,
                 Status = Shared.Enums.UserStatusEnum.Active
             });

@@ -2,6 +2,7 @@
 using BetFootballLeague.Application.DTOs;
 using BetFootballLeague.Domain.Entities;
 using BetFootballLeague.Domain.Repositories;
+using BetFootballLeague.Shared.Helpers;
 using Microsoft.EntityFrameworkCore;
 
 namespace BetFootballLeague.Application.Services
@@ -35,9 +36,37 @@ namespace BetFootballLeague.Application.Services
             return user != null ? _mapper.Map<UserDto>(user) : null;
         }
 
-        public async Task<UserDto?> GetUserByPhoneOrEmail(string input, Guid? currentUserId = null)
+        public async Task<UserDto?> GetUserByPhone(string input, Guid? currentUserId = null)
         {
-            var user = await _userRepository.GetUserByPhoneOrEmailAsync(input);
+            var user = await _userRepository.GetUserByPhoneAsync(input);
+            if (user != null)
+            {
+                if (currentUserId != null && user.Id == currentUserId)
+                {
+                    return null;
+                }
+                return _mapper.Map<UserDto>(user);
+            }
+            return null;
+        }
+
+        public async Task<UserDto?> GetUserByEmail(string input, Guid? currentUserId = null)
+        {
+            var user = await _userRepository.GetUserByEmailAsync(input);
+            if (user != null)
+            {
+                if (currentUserId != null && user.Id == currentUserId)
+                {
+                    return null;
+                }
+                return _mapper.Map<UserDto>(user);
+            }
+            return null;
+        }
+
+        public async Task<UserDto?> GetUserByUsername(string input, Guid? currentUserId = null)
+        {
+            var user = await _userRepository.GetUserByUsernameAsync(input);
             if (user != null)
             {
                 if (currentUserId != null && user.Id == currentUserId)
@@ -51,6 +80,7 @@ namespace BetFootballLeague.Application.Services
 
         public async Task AddUser(CreateUserRequestDto userDto)
         {
+            userDto.Password = PasswordHelper.HashPasword(userDto.Password);
             await _userRepository.AddUserAsync(_mapper.Map<User>(userDto));
         }
 

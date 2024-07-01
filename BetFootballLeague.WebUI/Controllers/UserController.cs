@@ -48,7 +48,7 @@ namespace BetFootballLeague.WebUI.Controllers
         {
             try
             {
-                var existUserByEmail = await _userService.GetUserByPhoneOrEmail(request.Email);
+                var existUserByEmail = await _userService.GetUserByPhone(request.Email);
                 if (existUserByEmail != null)
                 {
                     return Json(new ResponseModel
@@ -58,13 +58,23 @@ namespace BetFootballLeague.WebUI.Controllers
                     });
                 }
 
-                var existUserByPhone = await _userService.GetUserByPhoneOrEmail(request.Phone);
+                var existUserByPhone = await _userService.GetUserByEmail(request.Phone);
                 if (existUserByPhone != null)
                 {
                     return Json(new ResponseModel
                     {
                         Status = ResponseStatusEnum.FAILED,
                         Message = "Phone is already exist",
+                    });
+                }
+
+                var existUserByUsername = await _userService.GetUserByUsername(request.Username);
+                if (existUserByUsername != null)
+                {
+                    return Json(new ResponseModel
+                    {
+                        Status = ResponseStatusEnum.FAILED,
+                        Message = "Username is already exist",
                     });
                 }
 
@@ -132,7 +142,7 @@ namespace BetFootballLeague.WebUI.Controllers
                     });
                 }
 
-                var existUserByEmail = await _userService.GetUserByPhoneOrEmail(request.Email, request.Id);
+                var existUserByEmail = await _userService.GetUserByPhone(request.Email, request.Id);
                 if (existUserByEmail != null)
                 {
                     return Json(new ResponseModel
@@ -142,7 +152,7 @@ namespace BetFootballLeague.WebUI.Controllers
                     });
                 }
 
-                var existUserByPhone = await _userService.GetUserByPhoneOrEmail(request.Phone, request.Id);
+                var existUserByPhone = await _userService.GetUserByEmail(request.Phone, request.Id);
                 if (existUserByPhone != null)
                 {
                     return Json(new ResponseModel
