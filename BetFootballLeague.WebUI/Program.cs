@@ -1,8 +1,10 @@
 using BetFootballLeague.Application;
+using BetFootballLeague.Application.Middlewares;
 using BetFootballLeague.Application.Services;
 using BetFootballLeague.Domain.Repositories;
 using BetFootballLeague.Infrastructure.Data;
 using BetFootballLeague.Infrastructure.Repositories;
+using BetFootballLeague.Shared.Enums;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -27,6 +29,7 @@ builder.Services.AddScoped<GroupService>();
 builder.Services.AddScoped<RoundService>();
 builder.Services.AddScoped<TeamService>();
 builder.Services.AddScoped<MatchService>();
+builder.Services.AddScoped<AuthenticationService>();
 
 builder.Services.AddControllersWithViews(options =>
     {
@@ -60,9 +63,26 @@ builder.Services.AddAuthentication(options =>
         ValidAudience = jwtSettings.Audience,
         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings.Key))
     };
+    //options.Events = new JwtBearerEvents
+    //{
+    //    OnChallenge = context =>
+    //    {
+    //        if (!context.Response.HasStarted)
+    //        {
+    //            context.Response.Redirect("/Auth/Login");
+    //            context.HandleResponse();
+    //        }
+    //        return Task.CompletedTask;
+    //    }
+    //};
 });
 
-builder.Services.AddAuthorization();
+// add policy
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("Admin", policy => policy.RequireClaim("Role", Enum.GetName(typeof(RoleEnum), RoleEnum.ADMIN) ?? "Admin"));
+    options.AddPolicy("User", policy => policy.RequireClaim("Role", Enum.GetName(typeof(RoleEnum), RoleEnum.NORMAL_USER) ?? "User"));
+});
 
 var app = builder.Build();
 
@@ -73,6 +93,8 @@ if (!app.Environment.IsDevelopment())
     // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
+
+app.UseMiddleware<JwtMiddleware>();
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();

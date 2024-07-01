@@ -1,0 +1,38 @@
+﻿@{
+    ViewData["Title"] = "Login Page";
+}
+
+<div class="text-center">
+    <h3 class="display-6">Login</h3>
+    <div class="row mx-auto">
+        <div class="col-md-6 offset-3">
+            <div class="form-floating mb-3 mt-3">
+                <input type="text" class="form-control" id="username" placeholder="Username">
+                <label for="username">Username</label>
+            </div>
+            <div class="form-floating mb-3">
+                <input type="password" class="form-control" id="password" placeholder="Password">
+                <label for="password">Password</label>
+            </div>
+            <div class="d-grid gap-2 mb-3">
+                <button class="btn btn-primary" type="button" onclick="login()">Login</button>
+            </div>
+        </div>        
+    </div>
+    <div>
+        @if (User.Identity.IsAuthenticated)
+        {
+            <p>Bạn đã đăng nhập.</p>
+        }
+        else
+        {
+            <p>Bạn chưa đăng nhập.</p>
+        }
+    </div>
+</div>
+
+@Html.AntiForgeryToken()
+
+@section Scripts {
+    <script src="~/js/login.js" asp-append-version="true"></script>
+}
