@@ -18,6 +18,13 @@ namespace BetFootballLeague.Application.Middlewares
 
         public async Task Invoke(HttpContext context)
         {
+            // Logic để bỏ qua xác thực cho một số endpoint cụ thể
+            if (context.Request.Path.StartsWithSegments("/auth/login", StringComparison.OrdinalIgnoreCase))
+            {
+                await _next(context);
+                return;
+            }
+
             var token = context.Request.Cookies["jwtToken"];
             if (token == null)
             {

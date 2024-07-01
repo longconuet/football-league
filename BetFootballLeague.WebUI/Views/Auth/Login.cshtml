@@ -19,16 +19,6 @@
             </div>
         </div>        
     </div>
-    <div>
-        @if (User.Identity.IsAuthenticated)
-        {
-            <p>Bạn đã đăng nhập.</p>
-        }
-        else
-        {
-            <p>Bạn chưa đăng nhập.</p>
-        }
-    </div>
 </div>
 
 @Html.AntiForgeryToken()
