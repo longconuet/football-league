@@ -16,3 +16,8 @@ function showLoading() {
 function hideLoading() {
     $('#loadingGif, #overlay').hide();
 }
+
+function logout() {
+    localStorage.removeItem('jwtToken');
+    window.location.href = '/Auth/Logout';
+}

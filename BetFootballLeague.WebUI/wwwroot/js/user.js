@@ -3,6 +3,7 @@ $(document).ready(function () {
 });
 
 var token = $('input[name="__RequestVerificationToken"]').val();
+const jwtToken = localStorage.getItem('jwtToken');
 
 function getUserList() {
     $.ajax({
@@ -10,7 +11,8 @@ function getUserList() {
         url: '/User/GetUserListAjax',
         contentType: 'application/json',
         headers: {
-            'RequestVerificationToken': token, // Thêm token vào header
+            'RequestVerificationToken': token,
+            'Authorization': 'Bearer ' + jwtToken
         },
         success: function (response) {
             if (response.status == 0) {

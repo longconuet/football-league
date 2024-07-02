@@ -46,6 +46,16 @@
                             <a class="nav-link text-dark" asp-area="" asp-controller="Match" asp-action="Index">Matches</a>
                         </li>
                     </ul>
+                    <div class="d-flex">
+                        @if (User.Identity.IsAuthenticated)
+                        {
+                            <a href="javascript:void(0)" onclick="logout()" class="btn btn-outline-secondary ms-2">Logout</a>
+                        }
+                        else
+                        {
+                            <a href="/Auth/Login" class="btn btn-outline-success ms-2">Login</a>
+                        }                  
+                    </div>
                 </div>
             </div>
         </nav>

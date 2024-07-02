@@ -5,6 +5,7 @@ using BetFootballLeague.Domain.Repositories;
 using BetFootballLeague.Infrastructure.Data;
 using BetFootballLeague.Infrastructure.Repositories;
 using BetFootballLeague.Shared.Enums;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -29,7 +30,7 @@ builder.Services.AddScoped<GroupService>();
 builder.Services.AddScoped<RoundService>();
 builder.Services.AddScoped<TeamService>();
 builder.Services.AddScoped<MatchService>();
-builder.Services.AddScoped<AuthenticationService>();
+builder.Services.AddScoped<AuthService>();
 
 builder.Services.AddControllersWithViews(options =>
     {
@@ -46,36 +47,53 @@ new ConfigurationBuilder().AddJsonFile("appsettings.json").Build().GetSection("J
 builder.Services.AddSingleton(jwtSettings);
 
 // add Authentication and JwtBearer
-builder.Services.AddAuthentication(options =>
-{
-    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-})
-.AddJwtBearer(options =>
-{
-    options.TokenValidationParameters = new TokenValidationParameters
+//builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+//    .AddJwtBearer(options =>
+//    {
+//        options.TokenValidationParameters = new TokenValidationParameters
+//        {
+//            ValidateIssuer = true,
+//            ValidateAudience = true,
+//            ValidateLifetime = true,
+//            ValidateIssuerSigningKey = true,
+//            ValidIssuer = jwtSettings.Issuer,
+//            ValidAudience = jwtSettings.Audience,
+//            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings.Key)),
+//            ClockSkew = TimeSpan.Zero
+//        };
+//    });
+
+builder.Services
+    .AddAuthentication(x =>
     {
-        ValidateIssuer = true,
-        ValidateAudience = true,
-        ValidateLifetime = true,
-        ValidateIssuerSigningKey = true,
-        ValidIssuer = jwtSettings.Issuer,
-        ValidAudience = jwtSettings.Audience,
-        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings.Key))
-    };
-    //options.Events = new JwtBearerEvents
-    //{
-    //    OnChallenge = context =>
-    //    {
-    //        if (!context.Response.HasStarted)
-    //        {
-    //            context.Response.Redirect("/Auth/Login");
-    //            context.HandleResponse();
-    //        }
-    //        return Task.CompletedTask;
-    //    }
-    //};
-});
+        x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+        x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+    })
+    .AddJwtBearer(x =>
+    {
+        x.RequireHttpsMetadata = false;
+        x.SaveToken = true;
+        x.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuer = false,
+            ValidateAudience = false,
+            ValidateIssuerSigningKey = true,
+            ValidIssuer = jwtSettings.Issuer,
+            ValidAudience = jwtSettings.Audience,
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings.Key)),
+            ClockSkew = TimeSpan.Zero
+        };
+    });
+
+
+builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+    .AddCookie(options =>
+    {
+        options.LoginPath = "/Auth/Login";
+        options.AccessDeniedPath = "/Auth/AccessDenied";
+        options.LogoutPath = "/Auth/Logout";
+    });
+
 
 // add policy
 builder.Services.AddAuthorization(options =>
@@ -83,6 +101,9 @@ builder.Services.AddAuthorization(options =>
     options.AddPolicy("Admin", policy => policy.RequireClaim("Role", Enum.GetName(typeof(RoleEnum), RoleEnum.ADMIN) ?? "Admin"));
     options.AddPolicy("User", policy => policy.RequireClaim("Role", Enum.GetName(typeof(RoleEnum), RoleEnum.NORMAL_USER) ?? "User"));
 });
+
+builder.Services.AddHttpContextAccessor();
+builder.Services.AddSingleton<TokenBlacklistService>();
 
 var app = builder.Build();
 
@@ -94,8 +115,6 @@ if (!app.Environment.IsDevelopment())
     app.UseHsts();
 }
 
-app.UseMiddleware<JwtMiddleware>();
-
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 
@@ -103,6 +122,9 @@ app.UseRouting();
 
 app.UseAuthentication();
 app.UseAuthorization();
+
+app.UseMiddleware<UserInfoMiddleware>();
+app.UseMiddleware<BlacklistMiddleware>();
 
 app.MapControllerRoute(
     name: "default",

@@ -1,7 +1,6 @@
 ﻿var token = $('input[name="__RequestVerificationToken"]').val();
 
 function login() {
-    alert(1);
     var data = {
         Username: $('#username').val(),
         Password: $('#password').val()
@@ -22,7 +21,7 @@ function login() {
                 return;
             }
 
-            localStorage.setItem('token', response.data);
+            localStorage.setItem('jwtToken', response.data);
             window.location.href = '/Home/Index';
         },
         error: function (error) {
