@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 using BetFootballLeague.Domain.Entities;
+using Newtonsoft.Json.Linq;
 
 namespace BetFootballLeague.WebUI.Controllers
 {
@@ -33,20 +34,11 @@ namespace BetFootballLeague.WebUI.Controllers
         {
             try
             {
-                var token = await _authenticationService.Authenticate(request.Username, request.Password);
-                if (token != null)
-                {
-                    return Json(new ResponseModel<string>
-                    {
-                        Status = ResponseStatusEnum.SUCCEED,
-                        Data = token
-                    });
-                }
+                await _authenticationService.Authenticate(request.Username, request.Password);
 
                 return Json(new ResponseModel<string>
                 {
-                    Status = ResponseStatusEnum.FAILED,
-                    Message = "Login failed"
+                    Status = ResponseStatusEnum.SUCCEED
                 });
             }
             catch (Exception ex)
@@ -64,6 +56,12 @@ namespace BetFootballLeague.WebUI.Controllers
             await _authenticationService.SignOut();
 
             return RedirectToAction("Login", "Auth");
+        }
+
+        [HttpGet]
+        public IActionResult AccessDenied()
+        {
+            return View();
         }
     }
 }

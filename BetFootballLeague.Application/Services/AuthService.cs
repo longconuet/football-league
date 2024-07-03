@@ -27,7 +27,7 @@ namespace BetFootballLeague.Application.Services
             _tokenBlacklistService = tokenBlacklistService;
         }
 
-        public async Task<string?> Authenticate(string username, string password)
+        public async Task Authenticate(string username, string password)
         {
             var user = await _userRepository.GetUserByUsernameAsync(username);
             if (user != null && PasswordHelper.VerifyPassword(password, user.Password))
@@ -54,20 +54,19 @@ namespace BetFootballLeague.Application.Services
                     authProperties);
 
                 // token
-                return GenerateJwtToken(user.Id, username, user.Role);
+                //return GenerateJwtToken(user.Id, username, user.Role);
             }
-            return null;
         }
 
         public async Task SignOut()
         {
             // jwt
-            var token = _httpContextAccessor.HttpContext?.Request.Headers["Authorization"].ToString().Replace("Bearer ", "");
+            //var token = _httpContextAccessor.HttpContext?.Request.Headers["Authorization"].ToString().Replace("Bearer ", "");
 
-            if (!string.IsNullOrEmpty(token))
-            {
-                _tokenBlacklistService.BlacklistToken(token);
-            }
+            //if (!string.IsNullOrEmpty(token))
+            //{
+            //    _tokenBlacklistService.BlacklistToken(token);
+            //}
 
             // cookie
             await _httpContextAccessor.HttpContext!.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
@@ -75,51 +74,6 @@ namespace BetFootballLeague.Application.Services
 
         private string GenerateJwtToken(Guid userId, string username, RoleEnum role)
         {
-            //var tokenHandler = new JwtSecurityTokenHandler();
-            //var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings.Key));
-            //var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256Signature);
-
-            //var claims = new[]
-            //{
-            //    new Claim(JwtRegisteredClaimNames.Sub, username),
-            //    new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-            //    new Claim("Role", Enum.GetName(typeof(RoleEnum), role) ?? "")  // Thêm claim Role
-            //};
-
-            //var token = new JwtSecurityToken(
-            //    issuer: jwtSettings.Issuer,
-            //    audience: jwtSettings.Audience,
-            //    claims: claims,
-            //    expires: DateTime.Now.AddMinutes(jwtSettings.ExpiryMinutes),
-            //    signingCredentials: credentials
-            //);
-
-            //var claims1 = new List<Claim>
-            //        {
-            //            new Claim(ClaimTypes.Name, user.Username),
-            //            new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
-            //            new Claim(ClaimTypes.Role, Enum.GetName(typeof(RoleEnum), user.Role)),
-            //            new Claim("FullName", user.FullName),
-            //        };
-
-            //var tokenDescriptor = new SecurityTokenDescriptor
-            //{
-
-            //    Subject = new ClaimsIdentity(new Claim[]
-            //    {
-            //        new Claim(ClaimTypes.NameIdentifier, user.UserID),
-            //        new Claim(ClaimTypes.Role, user.Role.ToString()),
-            //                // Add more claims as needed
-            //    }),
-            //    Expires = DateTime.UtcNow.AddHours(1),
-            //    SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature),
-            //    Issuer = _configuration["Jwt:Issuer"], // Add this line
-            //    Audience = _configuration["Jwt:Audience"]
-            //};
-
-            //var token = tokenHandler.CreateToken(tokenDescriptor);
-            //return tokenHandler.WriteToken(token);
-
             var tokenHandler = new JwtSecurityTokenHandler();
             var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtSettings.Key));
             var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256Signature);

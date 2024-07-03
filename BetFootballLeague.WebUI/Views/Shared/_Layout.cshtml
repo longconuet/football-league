@@ -45,10 +45,14 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Match" asp-action="Index">Matches</a>
                         </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="UserBet" asp-action="Index">User Bets</a>
+                        </li>
                     </ul>
                     <div class="d-flex">
                         @if (User.Identity.IsAuthenticated)
                         {
+                            <span>Hello </span>
                             <a href="javascript:void(0)" onclick="logout()" class="btn btn-outline-secondary ms-2">Logout</a>
                         }
                         else

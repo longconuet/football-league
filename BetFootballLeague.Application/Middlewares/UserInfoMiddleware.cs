@@ -26,9 +26,9 @@ namespace BetFootballLeague.Application.Middlewares
 
                 var claims = context.User.Claims;
                 var role = claims.First(c => c.Type == ClaimTypes.Role).Value;
-                //var userId = claims.First(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
+                var userId = claims.First(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
 
-                //context.Items["UserId"] = userId;
+                context.Items["UserId"] = userId;
                 context.Items["Username"] = userName;
                 context.Items["Role"] = role;
             }

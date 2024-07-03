@@ -21,7 +21,6 @@ function login() {
                 return;
             }
 
-            localStorage.setItem('jwtToken', response.data);
             window.location.href = '/Home/Index';
         },
         error: function (error) {

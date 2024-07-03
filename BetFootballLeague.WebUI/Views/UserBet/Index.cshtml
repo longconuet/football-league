@@ -1,0 +1,41 @@
+﻿@{
+    ViewData["Title"] = "User Bet Page";
+}
+
+@section Style {
+    <link rel="stylesheet" href="~/css/user-bet.css" asp-append-version="true"></link>
+}
+
+<div>
+    <h1>User Bet List</h1>
+    @* <div class="row mb-3 mt-5">
+        <div class="col-auto text-right">
+            <button type="button" class="btn btn-success" onclick="showCreateModal()">
+                <i class="bi bi-plus-lg"></i> Create New User
+            </button>
+        </div>
+    </div> *@
+    <div>
+        <div id="user-bet-data">
+
+        </div>
+    </div>
+</div>
+
+<!-- Modal Create -->
+<partial name="_ModalCreate" />
+
+<!-- Modal Edit -->
+<partial name="_ModalUpdate" />
+
+<!-- Modal Delete -->
+<partial name="_ModalDelete" />
+
+<!-- Modal Update Status -->
+<partial name="_ModalUpdateStatus" />
+
+@Html.AntiForgeryToken()
+
+@section Scripts {
+    <script src="~/js/user-bet.js" asp-append-version="true"></script>
+}

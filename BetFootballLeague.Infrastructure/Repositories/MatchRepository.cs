@@ -51,5 +51,15 @@ namespace BetFootballLeague.Infrastructure.Repositories
             _context.Matches.Update(match);
             await _context.SaveChangesAsync();
         }
+
+        public async Task<List<LeagueMatch>> GetBetMatchesForUserAsync()
+        {
+            return await _context.Matches
+               .Include(x => x.Team1)
+               .Include(x => x.Team2)
+               .Include(x => x.Round)
+               .OrderBy(x => x.IndexOrder)
+               .ToListAsync();
+        }
     }
 }

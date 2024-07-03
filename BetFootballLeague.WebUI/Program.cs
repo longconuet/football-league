@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using System.Security.Claims;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -25,12 +26,14 @@ builder.Services.AddScoped<IGroupRepository, GroupRepository>();
 builder.Services.AddScoped<IRoundRepository, RoundRepository>();
 builder.Services.AddScoped<ITeamRepository, TeamRepository>();
 builder.Services.AddScoped<IMatchRepository, MatchRepository>();
+builder.Services.AddScoped<IUserBetRepository, UserBetRepository>();
 builder.Services.AddScoped<UserService>();
 builder.Services.AddScoped<GroupService>();
 builder.Services.AddScoped<RoundService>();
 builder.Services.AddScoped<TeamService>();
 builder.Services.AddScoped<MatchService>();
 builder.Services.AddScoped<AuthService>();
+builder.Services.AddScoped<UserBetService>();
 
 builder.Services.AddControllersWithViews(options =>
     {
@@ -63,27 +66,27 @@ builder.Services.AddSingleton(jwtSettings);
 //        };
 //    });
 
-builder.Services
-    .AddAuthentication(x =>
-    {
-        x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-        x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-    })
-    .AddJwtBearer(x =>
-    {
-        x.RequireHttpsMetadata = false;
-        x.SaveToken = true;
-        x.TokenValidationParameters = new TokenValidationParameters
-        {
-            ValidateIssuer = false,
-            ValidateAudience = false,
-            ValidateIssuerSigningKey = true,
-            ValidIssuer = jwtSettings.Issuer,
-            ValidAudience = jwtSettings.Audience,
-            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings.Key)),
-            ClockSkew = TimeSpan.Zero
-        };
-    });
+//builder.Services
+//    .AddAuthentication(x =>
+//    {
+//        x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+//        x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+//    })
+//    .AddJwtBearer(x =>
+//    {
+//        x.RequireHttpsMetadata = false;
+//        x.SaveToken = true;
+//        x.TokenValidationParameters = new TokenValidationParameters
+//        {
+//            ValidateIssuer = false,
+//            ValidateAudience = false,
+//            ValidateIssuerSigningKey = true,
+//            ValidIssuer = jwtSettings.Issuer,
+//            ValidAudience = jwtSettings.Audience,
+//            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings.Key)),
+//            ClockSkew = TimeSpan.Zero
+//        };
+//    });
 
 
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
@@ -98,8 +101,8 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
 // add policy
 builder.Services.AddAuthorization(options =>
 {
-    options.AddPolicy("Admin", policy => policy.RequireClaim("Role", Enum.GetName(typeof(RoleEnum), RoleEnum.ADMIN) ?? "Admin"));
-    options.AddPolicy("User", policy => policy.RequireClaim("Role", Enum.GetName(typeof(RoleEnum), RoleEnum.NORMAL_USER) ?? "User"));
+    options.AddPolicy("Admin", policy => policy.RequireClaim(ClaimTypes.Role, Enum.GetName(typeof(RoleEnum), RoleEnum.ADMIN) ?? "Admin"));
+    options.AddPolicy("User", policy => policy.RequireClaim(ClaimTypes.Role, Enum.GetName(typeof(RoleEnum), RoleEnum.NORMAL_USER) ?? "User"));
 });
 
 builder.Services.AddHttpContextAccessor();

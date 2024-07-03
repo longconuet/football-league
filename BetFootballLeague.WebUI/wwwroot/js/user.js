@@ -3,7 +3,6 @@ $(document).ready(function () {
 });
 
 var token = $('input[name="__RequestVerificationToken"]').val();
-const jwtToken = localStorage.getItem('jwtToken');
 
 function getUserList() {
     $.ajax({
@@ -11,8 +10,7 @@ function getUserList() {
         url: '/User/GetUserListAjax',
         contentType: 'application/json',
         headers: {
-            'RequestVerificationToken': token,
-            'Authorization': 'Bearer ' + jwtToken
+            'RequestVerificationToken': token
         },
         success: function (response) {
             if (response.status == 0) {
@@ -80,8 +78,10 @@ function submitCreateUser() {
         FullName: $('#name').val(),
         Phone: $('#phone').val(),
         Email: $('#email').val(),
+        Username: $('#username').val(),
         Role: $('#role').val(),
-        Status: $('#status').is(':checked') ? 1 : 0
+        Status: $('#status').is(':checked') ? 1 : 0,
+        Password: $('#password').val()
     };
 
     $.ajax({

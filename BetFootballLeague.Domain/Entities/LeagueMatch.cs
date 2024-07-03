@@ -22,5 +22,6 @@ namespace BetFootballLeague.Domain.Entities
         public Round Round { get; set; }
         public Team Team1 { get; set; }
         public Team Team2 { get; set; }
+        public ICollection<UserBet> UserBets { get; set; }
     }
 }

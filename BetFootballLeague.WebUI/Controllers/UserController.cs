@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace BetFootballLeague.WebUI.Controllers
 {
+    [Authorize(AuthenticationSchemes = CookieAuthenticationDefaults.AuthenticationScheme, Policy = "Admin")]
     public class UserController : Controller
     {
         private readonly UserService _userService;
@@ -18,13 +19,11 @@ namespace BetFootballLeague.WebUI.Controllers
             _userService = userService;
         }
 
-        [Authorize(AuthenticationSchemes = CookieAuthenticationDefaults.AuthenticationScheme)]
         public IActionResult Index()
         {
             return View();
         }
 
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         [HttpGet]
         public async Task<IActionResult> GetUserListAjax()
         {
