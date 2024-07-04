@@ -237,6 +237,7 @@ function getStatusLabel(status) {
 }
 
 function showCreateModal() {
+    $('#index-order').val($('#match-table-data tr').length + 1);
     $('#create-match-modal').modal('show');
 }
 
@@ -637,6 +638,8 @@ function submitUpdateScoreMatch() {
 function clearCreateModalInput() {
     $('#index-order').val('');
     $('#round').val('');
+    $('#date').val('');
+    $('#time').val('');
     $('#team1').val(null).trigger('change');
     $('#team2').val(null).trigger('change');
 }
