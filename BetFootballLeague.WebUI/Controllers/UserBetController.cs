@@ -81,6 +81,52 @@ namespace BetFootballLeague.WebUI.Controllers
         }
 
         [HttpGet]
+        public async Task<IActionResult> GetMatchInfoForUserBetAjax(Guid matchId)
+        {
+            try
+            {
+                var match = await _matchService.GetMatchById(matchId);
+                if (match == null)
+                {
+                    return Json(new ResponseModel<MatchBetDto>
+                    {
+                        Status = ResponseStatusEnum.FAILED,
+                        Message = "Match not found"
+                    });
+                }
+
+                if (match.BetStatus != MatchBetStatusEnum.OPENING)
+                {
+                    return Json(new ResponseModel<MatchBetDto>
+                    {
+                        Status = ResponseStatusEnum.FAILED,
+                        Message = "Can not bet this match"
+                    });
+                }
+
+                var currentUserId = Guid.Parse(HttpContext.Items["UserId"].ToString());
+                var userBet = await _userBetService.GetUserBetByMatchId(currentUserId, matchId);
+
+                MatchBetDto data = _mapper.Map<MatchBetDto>(match);
+                data.UserBet = userBet;
+
+                return Json(new ResponseModel<MatchBetDto>
+                {
+                    Status = ResponseStatusEnum.SUCCEED,
+                    Data = data
+                });
+            }
+            catch (Exception ex)
+            {
+                return Json(new ResponseModel<MatchBetDto>
+                {
+                    Status = ResponseStatusEnum.FAILED,
+                    Message = ex.Message,
+                });
+            }
+        }
+
+        [HttpGet]
         public async Task<IActionResult> GetUserBetInfoAjax(Guid id)
         {
             try

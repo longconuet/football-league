@@ -4,3 +4,23 @@
     background: #d6d8d9;
     border-radius: 10px;
 }
+
+.checked-bet-team {
+    background: aquamarine;
+}
+
+.unchecked-bet-team {
+    background: #dddddd;
+}
+
+.bet-team {
+    border-radius: 10px;
+}
+
+.bet-team > label {
+    margin: 15px;
+}
+
+.bet-team > label > img {
+    margin-right: 10px;
+}

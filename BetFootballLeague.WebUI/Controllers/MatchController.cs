@@ -358,12 +358,12 @@ namespace BetFootballLeague.WebUI.Controllers
                 // update team win bet when match ended
                 if (newStatus == MatchBetStatusEnum.IS_CLOSED)
                 {
-                    if (match.Team1Score > match.Team2Score)
+                    if (match.UpperDoorTeamId == match.Team1Id)
                     {
                         var diff = match.Team1Score - match.Team2Score;
                         match.WinBetTeamId = diff > match.Odds ? match.Team1Id : match.Team2Id;
                     }
-                    else
+                    else if (match.UpperDoorTeamId == match.Team2Id)
                     {
                         var diff = match.Team2Score - match.Team1Score;
                         match.WinBetTeamId = diff > match.Odds ? match.Team2Id : match.Team1Id;

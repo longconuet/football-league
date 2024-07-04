@@ -1,0 +1,31 @@
+﻿<div class="modal fade" id="bet-match-modal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="setBetMatchModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <input type="hidden" id="match-id" value="" />
+            <input type="hidden" id="user-bet-id" value="" />
+            <div class="modal-header">
+                <h5 class="modal-title" id="setBetMatchModalLabel">Bets match</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="mb-3">
+                    <label for="odds" class="form-label">Upper door team</label>
+                    <div>
+                        <div class="form-check form-check-inline bet-team unchecked-bet-team">
+                            <input class="form-check-input" type="radio" name="betTeam" id="bet-team1" value="">
+                            <label class="form-check-label" for="bet-team1" id="bet-team1-label">Team 1</label>
+                        </div>
+                        <div class="form-check form-check-inline bet-team unchecked-bet-team">
+                            <input class="form-check-input" type="radio" name="betTeam" id="bet-team2" value="">
+                            <label class="form-check-label" for="bet-team2" id="bet-label">Team 2</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" onclick="submitBetMatch()">Save</button>
+            </div>
+        </div>
+    </div>
+</div>

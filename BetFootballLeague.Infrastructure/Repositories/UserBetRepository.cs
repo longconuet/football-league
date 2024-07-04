@@ -43,5 +43,10 @@ namespace BetFootballLeague.Infrastructure.Repositories
             var userBets = await _context.UserBets.Where(x => x.UserId == userId).ToListAsync();
             return userBets;
         }
+
+        public async Task<UserBet?> GetUserBetByMatchIdAsync(Guid userId, Guid matchId)
+        {
+            return await _context.UserBets.FirstOrDefaultAsync(x => x.UserId == userId && x.MatchId == matchId);
+        }
     }
 }

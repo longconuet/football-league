@@ -139,11 +139,14 @@ function getMatchList() {
                         tableHtml += '<div>';
                         tableHtml += `<span><img src="${match.team1.image}" style="max-width: 50px; max-height: 50px;" alter="img" title="${match.team1.name}"></span>`;
                         tableHtml += `<span class="m-2">${match.team1.name}</span>`;
+                        if (match.upperDoorTeamId && match.upperDoorTeamId == match.team1Id) {
+                            tableHtml += `<span class="text-success"><i class="bi bi-caret-up-square-fill"></i> ${match.odds}</span>`;
+                        }
+                        else if (match.upperDoorTeamId && match.upperDoorTeamId != match.team1Id) {
+                            tableHtml += `<span class="text-danger"><i class="bi bi-caret-down-square-fill"></i> ${match.odds}</span>`;
+                        }
                         tableHtml += '</div>';
 
-                        if (match.upperDoorTeamId && match.upperDoorTeamId == match.team1Id) {
-                            tableHtml += `<span class="badge rounded-pill bg-info mt-2 me-2">Odds: ${match.odds}</span>`;
-                        }
                         if (match.winBetTeamId && match.winBetTeamId == match.team1Id) {
                             tableHtml += `<span class="badge rounded-pill bg-success mt-2 me-2">Win Bet</span>`;
                         }
@@ -159,11 +162,14 @@ function getMatchList() {
                         tableHtml += '<div>';
                         tableHtml += `<span><img src="${match.team2.image}" style="max-width: 50px; max-height: 50px;" alter="img" title="${match.team2.name}"></span>`;
                         tableHtml += `<span class="m-2">${match.team2.name}</span>`;
+                        if (match.upperDoorTeamId && match.upperDoorTeamId == match.team2Id) {
+                            tableHtml += `<span class="text-success"><i class="bi bi-caret-up-square-fill"></i> ${match.odds}</span>`;
+                        }
+                        else if (match.upperDoorTeamId && match.upperDoorTeamId != match.team2Id) {
+                            tableHtml += `<span class="text-danger"><i class="bi bi-caret-down-square-fill"></i> ${match.odds}</span>`;
+                        }
                         tableHtml += '</div>';
 
-                        if (match.upperDoorTeamId && match.upperDoorTeamId == match.team2Id) {
-                            tableHtml += `<span class="badge rounded-pill bg-info mt-2 me-2">Odds: ${match.odds}</span>`;
-                        }
                         if (match.winBetTeamId && match.winBetTeamId == match.team2Id) {
                             tableHtml += `<span class="badge rounded-pill bg-success mt-2 me-2">Win Bet</span>`;
                         }

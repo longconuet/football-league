@@ -46,7 +46,10 @@ function getUserBetList() {
                         divHtml += `<span>?</span></div>`;
                     }
 
-                    divHtml += `<div class="text-right"><button type="button" class="btn btn-success">Bet</div>`;
+                    if (item.betStatus == 1) {
+                        divHtml += `<div class="text-right"><button type="button" class="btn btn-success" onclick="showBetModal('${item.id}')">Bet</div>`;
+                    }
+                    
                     divHtml += `</div>`;
                 });
             }
@@ -77,4 +80,50 @@ function getMatchStatusLabel(status) {
     }
 
     return label;
+}
+
+function showBetModal(matchId) {
+    $.ajax({
+        type: "GET",
+        url: '/UserBet/GetMatchInfoForUserBetAjax/' + matchId,
+        contentType: 'application/json',
+        headers: {
+            'RequestVerificationToken': token
+        },
+        success: function (response) {
+            if (response.status == 0) {
+                toastr.error(response.message, 'Error');
+                return;
+            }
+
+            let matchInfo = response.data;
+            $('#match-id').val(matchId);
+            $('#bet-team1').val(matchInfo.team1Id);
+            $('#bet-team2').val(matchInfo.team2Id);
+            $('#bet-team1-label').html(`<img src="${matchInfo.team1.image}" style="max-width: 50px; max-height: 50px;" alter="img" title="img"><span>${matchInfo.team1.name}</span>`);
+            $('#bet-team2-label').html(`<img src="${matchInfo.team2.image}" style="max-width: 50px; max-height: 50px;" alter="img" title="img"><span>${matchInfo.team2.name}</span>`);
+
+            //if (matchInfo.upperDoorTeamId) {
+            //    if (matchInfo.upperDoorTeamId == matchInfo.team1Id) {
+            //        $('#upper-door-team1').prop('checked', true);
+            //        $('#upper-door-team2').prop('checked', false);
+            //    }
+            //    else {
+            //        $('#upper-door-team1').prop('checked', false);
+            //        $('#upper-door-team2').prop('checked', true);
+            //    }
+            //}
+            //else {
+            //    $('#upper-door-team1').prop('checked', false);
+            //    $('#upper-door-team2').prop('checked', false);
+            //}
+            //setOddsTeamLabel();
+
+            $('#bet-match-modal').modal('show');
+        },
+        error: function (error) {
+            $('#match-id').val('');
+            toastr.error(error, 'Error')
+        }
+    });
 }

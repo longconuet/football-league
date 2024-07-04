@@ -45,7 +45,7 @@ namespace BetFootballLeague.Application.Services
                 var authProperties = new AuthenticationProperties
                 {
                     IsPersistent = true,
-                    ExpiresUtc = DateTimeOffset.UtcNow.AddMinutes(30)
+                    ExpiresUtc = DateTimeOffset.UtcNow.AddDays(1)
                 };
 
                 await _httpContextAccessor.HttpContext!.SignInAsync(

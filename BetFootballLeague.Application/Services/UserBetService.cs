@@ -25,8 +25,14 @@ namespace BetFootballLeague.Application.Services
 
         public async Task<UserBetDto?> GetUserBetById(Guid id)
         {
-            var match = await _userBetRepository.GetUserBetByIdAsync(id);
-            return match != null ? _mapper.Map<UserBetDto>(match) : null;
+            var userBet = await _userBetRepository.GetUserBetByIdAsync(id);
+            return userBet != null ? _mapper.Map<UserBetDto>(userBet) : null;
+        }
+
+        public async Task<UserBetDto?> GetUserBetByMatchId(Guid userId, Guid matchId)
+        {
+            var userBet = await _userBetRepository.GetUserBetByMatchIdAsync(userId, matchId);
+            return userBet != null ? _mapper.Map<UserBetDto>(userBet) : null;
         }
 
         public async Task AddUserBet(CreateUserBetRequestDto matchDto)
