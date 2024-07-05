@@ -25,6 +25,12 @@ function getUserBetList() {
                     divHtml += `<div class="match-area">`;
 
                     divHtml += `<div><span>${item.dateTime}</span><span class="text-right">` + getMatchStatusLabel(item.betStatus) + `</span></div>`;
+                    if (item.userBet) {
+                        divHtml += `<div class="text-success">You have bet</div>`;
+                    }
+                    else {
+                        divHtml += `<div class="text-danger">You have not bet</div>`;
+                    }
 
                     if (item.team1) {
                         divHtml += `<div><span>${item.team1.name}</span>`;
@@ -45,6 +51,16 @@ function getUserBetList() {
                     else {
                         divHtml += `<span>?</span></div>`;
                     }
+
+                    // User bet status
+                    if (item.userBet) {
+                        if (item.betStatus == 2 && item.userBet.isWin) {
+                            divHtml += `<div class="text-success"><strong>YOU WIN</strong></div>`;
+                        }
+                        else if (item.betStatus == 2 && !item.userBet.isWin) {
+                            divHtml += `<div class="text-danger"><strong>YOU LOSE</strong></div>`;
+                        }
+                    }                    
 
                     if (item.betStatus == 1) {
                         divHtml += `<div class="text-right"><button type="button" class="btn btn-success" onclick="showBetModal('${item.id}')">Bet</div>`;
@@ -103,26 +119,101 @@ function showBetModal(matchId) {
             $('#bet-team1-label').html(`<img src="${matchInfo.team1.image}" style="max-width: 50px; max-height: 50px;" alter="img" title="img"><span>${matchInfo.team1.name}</span>`);
             $('#bet-team2-label').html(`<img src="${matchInfo.team2.image}" style="max-width: 50px; max-height: 50px;" alter="img" title="img"><span>${matchInfo.team2.name}</span>`);
 
-            //if (matchInfo.upperDoorTeamId) {
-            //    if (matchInfo.upperDoorTeamId == matchInfo.team1Id) {
-            //        $('#upper-door-team1').prop('checked', true);
-            //        $('#upper-door-team2').prop('checked', false);
-            //    }
-            //    else {
-            //        $('#upper-door-team1').prop('checked', false);
-            //        $('#upper-door-team2').prop('checked', true);
-            //    }
-            //}
-            //else {
-            //    $('#upper-door-team1').prop('checked', false);
-            //    $('#upper-door-team2').prop('checked', false);
-            //}
-            //setOddsTeamLabel();
+            $('#match-datetime').html(matchInfo.dateTime);
+            $('#match-status').html(getMatchStatusLabel(matchInfo.betStatus));
+
+            let team1OddsHtml = '';
+            let team2OddsHtml = '';
+            if (matchInfo.upperDoorTeamId == matchInfo.team1Id) {
+                team1OddsHtml = `<span class="text-success"><i class="bi bi-caret-up-square-fill"></i> ${matchInfo.odds}</span>`;
+                team2OddsHtml = `<span class="text-danger"><i class="bi bi-caret-down-square-fill"></i> ${matchInfo.odds}</span>`;
+            }
+            else {
+                team1OddsHtml = `<span class="text-danger"><i class="bi bi-caret-down-square-fill"></i> ${matchInfo.odds}</span>`;
+                team2OddsHtml = `<span class="text-success"><i class="bi bi-caret-up-square-fill"></i> ${matchInfo.odds}</span>`;
+            }
+            $('#team1-odds').html(team1OddsHtml);
+            $('#team2-odds').html(team2OddsHtml);
+
+            if (matchInfo.userBet) {
+                if (matchInfo.userBet.betTeamId == matchInfo.team1Id) {
+                    $('#bet-team1').prop('checked', true);
+                    $('#bet-team2').prop('checked', false);
+                    $('#bet-text').html(`<p class="text-succes">You bet for <strong>${matchInfo.team1.name}</strong></p>`);
+                }
+                else {
+                    $('#bet-team1').prop('checked', false);
+                    $('#bet-team2').prop('checked', true);
+                    $('#bet-text').html(`<p class="text-success">You bet for <strong>${matchInfo.team2.name}</strong></p>`);
+                }
+                $('#bet-text').append(`<i class="text-sm">Created at: ${matchInfo.userBet.createdAtStr}</i>`)
+                if (matchInfo.userBet.updatedAtStr) {
+                    $('#bet-text').append(`<br/><i class="text-sm">Last updated at: ${matchInfo.userBet.updatedAtStr}</i>`)
+                }                
+            }
+            else {
+                $('#bet-text').html(`<p class="text-danger">You have not bet!</p>`);
+            }
+            setBetTeamLabel();
 
             $('#bet-match-modal').modal('show');
         },
         error: function (error) {
             $('#match-id').val('');
+            toastr.error(error, 'Error')
+        }
+    });
+}
+
+$('#bet-match-modal input[name="betTeam"]').on('click', function () {
+    setBetTeamLabel();
+});
+
+function setBetTeamLabel() {
+    $('#bet-match-modal input[name="betTeam"]').each(function () {
+        if ($(this).prop('checked') == false) {
+            $(this).parent().removeClass('checked-bet-team');
+            $(this).parent().addClass('unchecked-bet-team');
+        }
+        else {
+            $(this).parent().removeClass('unchecked-bet-team');
+            $(this).parent().addClass('checked-bet-team');
+        }
+    });
+}
+
+function submitBetMatch() {
+    var checkedTeamId = $('#bet-match-modal input[name="betTeam"]:checked').val();
+    if (!checkedTeamId) {
+        toastr.error('Please select a team', 'Error');
+        return;
+    }
+
+    var data = {
+        MatchId: $('#match-id').val(),
+        BetTeamId: checkedTeamId
+    };
+
+    $.ajax({
+        url: '/UserBet/BetMatchAjax',
+        data: JSON.stringify(data),
+        type: "POST",
+        contentType: "application/json;charset=utf-8",
+        dataType: "json",
+        headers: {
+            'RequestVerificationToken': token
+        },
+        success: function (response) {
+            if (response.status == 0) {
+                toastr.error(response.message, 'Error');
+                return;
+            }
+
+            toastr.success(response.message, 'Success');
+            getUserBetList();
+            $('#bet-match-modal').modal('hide');
+        },
+        error: function (error) {
             toastr.error(error, 'Error')
         }
     });

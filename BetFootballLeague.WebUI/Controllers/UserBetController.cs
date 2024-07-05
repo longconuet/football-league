@@ -4,6 +4,8 @@ using BetFootballLeague.Application.Services;
 using BetFootballLeague.Shared.Enums;
 using BetFootballLeague.WebUI.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.FileSystemGlobbing;
+using System.Text.RegularExpressions;
 
 namespace BetFootballLeague.WebUI.Controllers
 {
@@ -57,34 +59,12 @@ namespace BetFootballLeague.WebUI.Controllers
             }
         }
 
-        [HttpPost]
-        public async Task<IActionResult> CreateUserBetAjax([FromBody] CreateUserBetRequestDto request)
-        {
-            try
-            {
-                await _userBetService.AddUserBet(request);
-
-                return Json(new ResponseModel
-                {
-                    Status = ResponseStatusEnum.SUCCEED,
-                    Message = "Create new userBet successfully"
-                });
-            }
-            catch (Exception ex)
-            {
-                return Json(new ResponseModel
-                {
-                    Status = ResponseStatusEnum.FAILED,
-                    Message = ex.Message,
-                });
-            }
-        }
-
         [HttpGet]
-        public async Task<IActionResult> GetMatchInfoForUserBetAjax(Guid matchId)
+        public async Task<IActionResult> GetMatchInfoForUserBetAjax(string id)
         {
             try
             {
+                var matchId = Guid.Parse(id);
                 var match = await _matchService.GetMatchById(matchId);
                 if (match == null)
                 {
@@ -119,6 +99,72 @@ namespace BetFootballLeague.WebUI.Controllers
             catch (Exception ex)
             {
                 return Json(new ResponseModel<MatchBetDto>
+                {
+                    Status = ResponseStatusEnum.FAILED,
+                    Message = ex.Message,
+                });
+            }
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> BetMatchAjax([FromBody] BetMatchRequestDto request)
+        {
+            try
+            {
+                Guid currentUserId = Guid.Parse(HttpContext.Items["UserId"].ToString());
+
+                var match = await _matchService.GetMatchById(request.MatchId);
+                if (match == null)
+                {
+                    return Json(new ResponseModel<MatchBetDto>
+                    {
+                        Status = ResponseStatusEnum.FAILED,
+                        Message = "Match not found"
+                    });
+                }
+
+                if (match.BetStatus != MatchBetStatusEnum.OPENING)
+                {
+                    return Json(new ResponseModel<MatchBetDto>
+                    {
+                        Status = ResponseStatusEnum.FAILED,
+                        Message = "Can not bet this match"
+                    });
+                }
+
+                if (request.BetTeamId != match.Team1Id && request.BetTeamId != match.Team2Id)
+                {
+                    return Json(new ResponseModel<MatchBetDto>
+                    {
+                        Status = ResponseStatusEnum.FAILED,
+                        Message = "Invalid team"
+                    });
+                }
+
+                var userBetDto = await _userBetService.GetUserBetByMatchId(currentUserId, match.Id);
+                if (userBetDto == null)
+                {
+                    // create
+                    var createUserBetRequestDto = _mapper.Map<CreateUserBetRequestDto>(request);
+                    createUserBetRequestDto.UserId = currentUserId;
+                    await _userBetService.AddUserBet(createUserBetRequestDto);
+                }
+                else
+                {
+                    // update
+                    userBetDto.BetTeamId = request.BetTeamId;
+                    await _userBetService.UpdateUserBet(userBetDto);
+                }                
+
+                return Json(new ResponseModel
+                {
+                    Status = ResponseStatusEnum.SUCCEED,
+                    Message = "Bet successfully"
+                });
+            }
+            catch (Exception ex)
+            {
+                return Json(new ResponseModel
                 {
                     Status = ResponseStatusEnum.FAILED,
                     Message = ex.Message,

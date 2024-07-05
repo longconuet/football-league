@@ -26,7 +26,7 @@ body {
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    z-index: 1000; /* Ensures the GIF is on top */
+    z-index: 10000; /* Ensures the GIF is on top */
     padding: 10px;    
 }
 
@@ -43,7 +43,7 @@ body {
     width: 100%;
     height: 100%;
     background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
-    z-index: 999; /* Should be less than the loading GIF z-index */
+    z-index: 9999; /* Should be less than the loading GIF z-index */
 }
 
 footer {

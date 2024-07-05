@@ -12,12 +12,14 @@ namespace BetFootballLeague.WebUI.Controllers
         private readonly MatchService _matchService;
         private readonly RoundService _roundService;
         private readonly TeamService _teamService;
+        private readonly UserBetService _userBetService;
 
-        public MatchController(MatchService matchService, RoundService roundService, TeamService teamService)
+        public MatchController(MatchService matchService, RoundService roundService, TeamService teamService, UserBetService userBetService)
         {
             _matchService = matchService;
             _roundService = roundService;
             _teamService = teamService;
+            _userBetService = userBetService;
         }
 
         public IActionResult Index()
@@ -377,6 +379,16 @@ namespace BetFootballLeague.WebUI.Controllers
 
                 match.BetStatus = newStatus;
                 await _matchService.UpdateMatch(match);
+
+                // update user bets
+                if (newStatus == MatchBetStatusEnum.IS_CLOSED)
+                {
+                    var userBets = await _userBetService.GetBetsByMatch(match.Id);
+                    if (userBets.Any())
+                    {
+                        await _userBetService.UpdateUserBetsResultForEndedMatch(match, userBets);
+                    }
+                }                    
 
                 return Json(new ResponseModel
                 {

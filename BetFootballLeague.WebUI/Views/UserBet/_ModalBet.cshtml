@@ -4,20 +4,28 @@
             <input type="hidden" id="match-id" value="" />
             <input type="hidden" id="user-bet-id" value="" />
             <div class="modal-header">
-                <h5 class="modal-title" id="setBetMatchModalLabel">Bets match</h5>
+                <h5 class="modal-title" id="setBetMatchModalLabel">Bet match</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
                 <div class="mb-3">
-                    <label for="odds" class="form-label">Upper door team</label>
                     <div>
-                        <div class="form-check form-check-inline bet-team unchecked-bet-team">
+                        <div class="col-md-12 mb-3">
+                            <span id="match-datetime"></span>
+                            <span id="match-status"></span>
+                        </div>
+                        <div class="form-check form-check-inline bet-team unchecked-bet-team col-md-12 mb-3">
                             <input class="form-check-input" type="radio" name="betTeam" id="bet-team1" value="">
                             <label class="form-check-label" for="bet-team1" id="bet-team1-label">Team 1</label>
+                            <span id="team1-odds"></span>
                         </div>
-                        <div class="form-check form-check-inline bet-team unchecked-bet-team">
+                        <div class="form-check form-check-inline bet-team unchecked-bet-team col-md-12 mb-3">
                             <input class="form-check-input" type="radio" name="betTeam" id="bet-team2" value="">
-                            <label class="form-check-label" for="bet-team2" id="bet-label">Team 2</label>
+                            <label class="form-check-label" for="bet-team2" id="bet-team2-label">Team 2</label>
+                            <span id="team2-odds"></span>
+                        </div>
+                        <div class="col-md-12">
+                            <p id="bet-text"></p>
                         </div>
                     </div>
                 </div>

@@ -42,8 +42,18 @@ namespace BetFootballLeague.Application.Mappings
                 .ForMember(dest => dest.Time, opt => opt.MapFrom(src => TimeOnly.ParseExact(src.Time, "HH:mm")))
                 .ForMember(dest => dest.DateTime, opt => opt.MapFrom(src => DateTime.ParseExact($"{src.Date} {src.Time}", "dd/MM/yyyy HH:mm", CultureInfo.CurrentCulture)));
 
-            CreateMap<UserBet, UserBetDto>().ReverseMap();
+            CreateMap<UserBet, UserBetDto>()
+                .ForMember(dest => dest.CreatedAtStr, opt => opt.MapFrom(src => src.CreatedAt.ToString("HH:mm dd/MM/yyyy")))
+                .ForMember(dest => dest.UpdatedAtStr, opt => opt.MapFrom(src => src.UpdatedAt));
+            CreateMap<UserBetDto, UserBet>();
             CreateMap<MatchDto, MatchBetDto>();
+            CreateMap<BetMatchRequestDto, CreateUserBetRequestDto>();
+            CreateMap<BetMatchRequestDto, UpdateUserBetRequestDto>();
+            CreateMap<CreateUserBetRequestDto, UserBet>();
+            CreateMap<UpdateUserBetRequestDto, UserBet>();
+
+            CreateMap<DateTime?, string?>()
+                .ConvertUsing(new NullableDateTimeToStringConverter());
         }
     }
 }

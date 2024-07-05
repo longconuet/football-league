@@ -27,7 +27,14 @@ namespace BetFootballLeague.Infrastructure.Repositories
 
         public async Task UpdateUserBetAsync(UserBet userBet)
         {
+            userBet.UpdatedAt = DateTime.Now;
             _context.UserBets.Update(userBet);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task UpdateUserBetsAsync(List<UserBet> userBets)
+        {
+            _context.UserBets.UpdateRange(userBets);
             await _context.SaveChangesAsync();
         }
 
@@ -44,9 +51,15 @@ namespace BetFootballLeague.Infrastructure.Repositories
             return userBets;
         }
 
+        public async Task<List<UserBet>> GetBetsByMatchAsync(Guid matchId)
+        {
+            var userBets = await _context.UserBets.AsNoTracking().Where(x => x.MatchId == matchId).ToListAsync();
+            return userBets;
+        }
+
         public async Task<UserBet?> GetUserBetByMatchIdAsync(Guid userId, Guid matchId)
         {
-            return await _context.UserBets.FirstOrDefaultAsync(x => x.UserId == userId && x.MatchId == matchId);
+            return await _context.UserBets.AsNoTracking().FirstOrDefaultAsync(x => x.UserId == userId && x.MatchId == matchId);
         }
     }
 }

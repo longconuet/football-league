@@ -145,6 +145,9 @@ function getMatchList() {
                         else if (match.upperDoorTeamId && match.upperDoorTeamId != match.team1Id) {
                             tableHtml += `<span class="text-danger"><i class="bi bi-caret-down-square-fill"></i> ${match.odds}</span>`;
                         }
+                        if (match.team1Score != null) {
+                            tableHtml += `<span class="badge bg-success mt-2 me-2"><h3>${match.team1Score}</h3></span>`;
+                        }
                         tableHtml += '</div>';
 
                         if (match.winBetTeamId && match.winBetTeamId == match.team1Id) {
@@ -168,6 +171,9 @@ function getMatchList() {
                         else if (match.upperDoorTeamId && match.upperDoorTeamId != match.team2Id) {
                             tableHtml += `<span class="text-danger"><i class="bi bi-caret-down-square-fill"></i> ${match.odds}</span>`;
                         }
+                        if (match.team2Score != null) {
+                            tableHtml += `<span class="badge bg-success mt-2 me-2"><h3>${match.team2Score}</h3></span>`;
+                        }
                         tableHtml += '</div>';
 
                         if (match.winBetTeamId && match.winBetTeamId == match.team2Id) {
@@ -182,7 +188,7 @@ function getMatchList() {
 
                     // score
                     tableHtml += '<td class="text-center">';
-                    if (match.team1Score && match.team2Score) {
+                    if (match.team1Score != null && match.team2Score != null) {
                         tableHtml += `<span class="m-2">${match.team1Score} - ${match.team2Score}</span>`;
                     }
                     tableHtml += '</td>';
@@ -505,12 +511,12 @@ function showUpdateStatusModal(id) {
             $('#update-status-match-modal input[name="statusUpdate"]').prop('disabled', false).prop('checked', false);
             $('#status-update-' + currentStatus).prop('disabled', true).prop('checked', true);
 
-            if (currentStatus == 0 && (!matchInfo.team1Id || !matchInfo.team2Id || !matchInfo.odds)) {
+            if (currentStatus == 0 && (matchInfo.team1Id == null || matchInfo.team2Id == null || matchInfo.odds == null)) {
                 $('#status-update-1').prop('disabled', true);
                 $('#status-update-2').prop('disabled', true);
             }
 
-            if (currentStatus == 1 && !matchInfo.team1Score) {
+            if (currentStatus == 1 && matchInfo.team1Score == null) {
                 $('#status-update-0').prop('disabled', true);
                 $('#status-update-2').prop('disabled', true);
             }
@@ -587,10 +593,10 @@ function showUpdateScoreModal(id) {
             $('#score-team2-name').html(matchInfo.team2.name);
             $('#score-team2-img').attr('src', matchInfo.team2.image);
 
-            if (matchInfo.team1Score) {
+            if (matchInfo.team1Score != null) {
                 $('#score-team1').val(matchInfo.team1Score);
             }
-            if (matchInfo.team2Score) {
+            if (matchInfo.team2Score != null) {
                 $('#score-team2').val(matchInfo.team2Score);
             }
 

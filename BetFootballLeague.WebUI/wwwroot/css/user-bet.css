@@ -24,3 +24,8 @@
 .bet-team > label > img {
     margin-right: 10px;
 }
+
+.bet-team > input {
+    margin-top: 31px;
+    margin-left: 0px !important;
+}
