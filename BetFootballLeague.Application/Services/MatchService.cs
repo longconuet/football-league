@@ -1,7 +1,10 @@
 ﻿using AutoMapper;
+using Azure.Core;
 using BetFootballLeague.Application.DTOs;
 using BetFootballLeague.Domain.Entities;
 using BetFootballLeague.Domain.Repositories;
+using BetFootballLeague.Shared.Enums;
+using System.Linq.Expressions;
 
 namespace BetFootballLeague.Application.Services
 {
@@ -16,9 +19,15 @@ namespace BetFootballLeague.Application.Services
             _mapper = mapper;
         }
 
-        public async Task<List<MatchDto>> GetMatches()
+        public async Task<List<MatchDto>> GetMatches(MatchBetStatusEnum? status = null)
         {
-            var matches = await _matchRepository.GetMatchesAsync();
+            Expression<Func<LeagueMatch, bool>>? filter = null;
+            if (status != null)
+            {
+                filter = x => x.BetStatus == status.Value;
+            }
+
+            var matches = await _matchRepository.GetMatchesAsync(filter);
             return _mapper.Map<List<MatchDto>>(matches);
         }
 

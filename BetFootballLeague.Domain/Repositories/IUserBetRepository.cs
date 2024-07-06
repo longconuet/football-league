@@ -1,10 +1,11 @@
 ﻿using BetFootballLeague.Domain.Entities;
+using System.Linq.Expressions;
 
 namespace BetFootballLeague.Domain.Repositories
 {
     public interface IUserBetRepository
     {
-        Task<List<UserBet>> GetBetsByUserAsync(Guid userId);
+        Task<List<UserBet>> GetBetsByUserAsync(Guid userId, Expression<Func<UserBet, bool>>? filter = null, bool tracked = true);
         Task<List<UserBet>> GetBetsByMatchAsync(Guid matchId);
         Task<UserBet?> GetUserBetByIdAsync(Guid id);
         Task<UserBet?> GetUserBetByMatchIdAsync(Guid userId, Guid matchId);

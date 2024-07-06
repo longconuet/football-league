@@ -2,7 +2,8 @@
 using BetFootballLeague.Application.DTOs;
 using BetFootballLeague.Domain.Entities;
 using BetFootballLeague.Domain.Repositories;
-using BetFootballLeague.Infrastructure.Repositories;
+using BetFootballLeague.Shared.Enums;
+using System.Linq.Expressions;
 
 namespace BetFootballLeague.Application.Services
 {
@@ -17,9 +18,15 @@ namespace BetFootballLeague.Application.Services
             _mapper = mapper;
         }
 
-        public async Task<List<UserBetDto>> GetBetsByUser(Guid userId)
+        public async Task<List<UserBetDto>> GetBetsByUser(Guid userId, BetListByUserFilterRequestDto request)
         {
-            var userBets = await _userBetRepository.GetBetsByUserAsync(userId);
+            Expression<Func<UserBet, bool>>? filter = null;
+            if (request.Status != null)
+            {
+                filter = x => x.Match.BetStatus == (MatchBetStatusEnum)request.Status;
+            }
+
+            var userBets = await _userBetRepository.GetBetsByUserAsync(userId, filter);
             return _mapper.Map<List<UserBetDto>>(userBets);
         }
 

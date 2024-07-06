@@ -2,6 +2,8 @@
 using BetFootballLeague.Domain.Repositories;
 using BetFootballLeague.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
+using System.Linq;
+using System.Linq.Expressions;
 
 namespace BetFootballLeague.Infrastructure.Repositories
 {
@@ -45,10 +47,19 @@ namespace BetFootballLeague.Infrastructure.Repositories
             await _context.SaveChangesAsync();
         }
 
-        public async Task<List<UserBet>> GetBetsByUserAsync(Guid userId)
+        public async Task<List<UserBet>> GetBetsByUserAsync(Guid userId, Expression<Func<UserBet, bool>>? filter = null, bool tracked = true)
         {
-            var userBets = await _context.UserBets.Where(x => x.UserId == userId).ToListAsync();
-            return userBets;
+            IQueryable<UserBet> query = _context.UserBets.Include(x => x.Match).Where(x => x.UserId == userId);
+            if (filter != null)
+            {
+                query = query.Where(filter);
+            }
+            if (!tracked)
+            {
+                query = query.AsNoTracking();
+            }
+
+            return await query.ToListAsync();
         }
 
         public async Task<List<UserBet>> GetBetsByMatchAsync(Guid matchId)

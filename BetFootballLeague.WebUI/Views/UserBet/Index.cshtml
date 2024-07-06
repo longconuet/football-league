@@ -8,32 +8,26 @@
 
 <div>
     <h1>User Bet List</h1>
-    @* <div class="row mb-3 mt-5">
+    <div class="row mb-3 mt-3">
         <div class="col-auto text-right">
-            <button type="button" class="btn btn-success" onclick="showCreateModal()">
-                <i class="bi bi-plus-lg"></i> Create New User
-            </button>
+            <select class="form-select" aria-label="Match Status" id="match-status-filter" onchange="getUserBetList()">
+                <option value="">All Status</option>
+                <option value="1" selected>Opening</option>
+                <option value="2">Closed</option>
+                <option value="0">Not allowed to bet</option>
+            </select>
         </div>
-    </div> *@
+    </div>
     <div>
         <div id="user-bet-data"></div>
     </div>
 </div>
 
-<!-- Modal Create -->
-<partial name="_ModalCreate" />
-
-<!-- Modal Edit -->
-<partial name="_ModalUpdate" />
-
-<!-- Modal Delete -->
-<partial name="_ModalDelete" />
-
-<!-- Modal Update Status -->
-<partial name="_ModalUpdateStatus" />
-
 <!-- Modal Bet -->
 <partial name="_ModalBet" />
+
+<!-- Modal Bet Detail -->
+<partial name="_ModalBetDetail" />
 
 @Html.AntiForgeryToken()
 

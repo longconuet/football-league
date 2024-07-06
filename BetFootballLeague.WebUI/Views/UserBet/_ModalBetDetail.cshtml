@@ -1,0 +1,44 @@
+﻿<div class="modal fade" id="bet-match-detail-modal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="setBetMatchDetailModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <input type="hidden" id="detail-user-bet-id" value="" />
+            <div class="modal-header">
+                <h5 class="modal-title" id="setBetMatchModalLabel">Bet match detail</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="mb-3">
+                    <div>
+                        <div class="col-md-12 mb-3">
+                            <span id="match-datetime-detail"></span>
+                            <span id="match-status-detail"></span>
+                        </div>
+                        <div class="form-check form-check-inline bet-team unchecked-bet-team col-md-12 mb-3" id="team1-detail">
+                            <input hidden name="betTeamDetail" id="bet-team1-detail" value="" disabled>
+                            <label class="form-check-label" for="bet-team1-detail" id="bet-team1-detail-label">Team 1</label>
+                            <span id="team1-odds-detail"></span>
+                            <span id="team1-score-detail"></span>
+                            <span id="team1-bet-status-detail"></span>
+                        </div>
+                        <div class="form-check form-check-inline bet-team unchecked-bet-team col-md-12 mb-3" id="team2-detail">
+                            <input hidden name="betTeamDetail" id="bet-team2-detail" value="" disabled>
+                            <label class="form-check-label" for="bet-team2-detail" id="bet-team2-detail-label">Team 2</label>
+                            <span id="team2-odds-detail"></span>
+                            <span id="team2-score-detail"></span>
+                            <span id="team2-bet-status-detail"></span>
+                        </div>
+                        <div class="col-md-12">
+                            <p id="bet-text-detail"></p>
+                        </div>
+                        <div class="col-md-12">
+                            <p id="bet-result-detail"></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>

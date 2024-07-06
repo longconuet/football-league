@@ -28,13 +28,13 @@ namespace BetFootballLeague.WebUI.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetUserBetListAjax()
+        public async Task<IActionResult> GetUserBetListAjax([FromQuery] BetListByUserFilterRequestDto request)
         {
             try
             {
                 var currentUserId = Guid.Parse(HttpContext.Items["UserId"].ToString());
-                List<UserBetDto> userBets = await _userBetService.GetBetsByUser(currentUserId);
-                List<MatchDto> matches = await _matchService.GetMatches();
+                List<UserBetDto> userBets = await _userBetService.GetBetsByUser(currentUserId, request);
+                List<MatchDto> matches = await _matchService.GetMatches(request.Status != null ? (MatchBetStatusEnum)request.Status : null);
 
                 List<MatchBetDto> data = _mapper.Map<List<MatchBetDto>>(matches);
                 foreach (var matchBet in data)
@@ -186,6 +186,27 @@ namespace BetFootballLeague.WebUI.Controllers
                         Message = "Bet not found"
                     });
                 }
+
+                Guid currentUserId = Guid.Parse(HttpContext.Items["UserId"].ToString());
+                if (userBet.UserId != currentUserId)
+                {
+                    return Json(new ResponseModel<UserBetDto>
+                    {
+                        Status = ResponseStatusEnum.FAILED,
+                        Message = "Invalid bet"
+                    });
+                }
+
+                var match = await _matchService.GetMatchById(userBet.MatchId);
+                if (match == null)
+                {
+                    return Json(new ResponseModel<MatchBetDto>
+                    {
+                        Status = ResponseStatusEnum.FAILED,
+                        Message = "Match not found"
+                    });
+                }
+                userBet.Match = match;
 
                 return Json(new ResponseModel<UserBetDto>
                 {

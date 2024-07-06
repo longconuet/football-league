@@ -2,6 +2,7 @@
 using BetFootballLeague.Domain.Repositories;
 using BetFootballLeague.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
+using System.Linq.Expressions;
 
 namespace BetFootballLeague.Infrastructure.Repositories
 {
@@ -14,9 +15,19 @@ namespace BetFootballLeague.Infrastructure.Repositories
             _context = context;
         }
 
-        public async Task<List<LeagueMatch>> GetMatchesAsync()
+        public async Task<List<LeagueMatch>> GetMatchesAsync(Expression<Func<LeagueMatch, bool>>? filter = null, bool tracked = true)
         {
-            return await _context.Matches
+            IQueryable<LeagueMatch> query = _context.Matches;
+            if (filter != null)
+            {
+                query = query.Where(filter);
+            }
+            if (!tracked)
+            {
+                query = query.AsNoTracking();
+            }
+
+            return await query
                 .Include(x => x.Team1)
                 .Include(x => x.Team2)
                 .Include(x => x.Round)

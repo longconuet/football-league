@@ -145,9 +145,6 @@ function getMatchList() {
                         else if (match.upperDoorTeamId && match.upperDoorTeamId != match.team1Id) {
                             tableHtml += `<span class="text-danger"><i class="bi bi-caret-down-square-fill"></i> ${match.odds}</span>`;
                         }
-                        if (match.team1Score != null) {
-                            tableHtml += `<span class="badge bg-success mt-2 me-2"><h3>${match.team1Score}</h3></span>`;
-                        }
                         tableHtml += '</div>';
 
                         if (match.winBetTeamId && match.winBetTeamId == match.team1Id) {
@@ -170,9 +167,6 @@ function getMatchList() {
                         }
                         else if (match.upperDoorTeamId && match.upperDoorTeamId != match.team2Id) {
                             tableHtml += `<span class="text-danger"><i class="bi bi-caret-down-square-fill"></i> ${match.odds}</span>`;
-                        }
-                        if (match.team2Score != null) {
-                            tableHtml += `<span class="badge bg-success mt-2 me-2"><h3>${match.team2Score}</h3></span>`;
                         }
                         tableHtml += '</div>';
 

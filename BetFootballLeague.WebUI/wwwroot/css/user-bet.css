@@ -3,6 +3,7 @@
     padding: 10px;
     background: #d6d8d9;
     border-radius: 10px;
+    text-align: center;
 }
 
 .checked-bet-team {
@@ -11,6 +12,14 @@
 
 .unchecked-bet-team {
     background: #dddddd;
+}
+
+.win-bet-team {
+    background: aquamarine;
+}
+
+.lose-bet-team {
+    background: #fd9fa1;
 }
 
 .bet-team {
