@@ -9,6 +9,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using BetFootballLeague.Domain.Entities;
+using BetFootballLeague.Application.DTOs;
 
 namespace BetFootballLeague.Application.Services
 {
@@ -27,35 +28,31 @@ namespace BetFootballLeague.Application.Services
             _tokenBlacklistService = tokenBlacklistService;
         }
 
-        public async Task Authenticate(string username, string password)
+        public async Task Authenticate(UserDto userDto)
         {
-            var user = await _userRepository.GetUserByUsernameAsync(username);
-            if (user != null && PasswordHelper.VerifyPassword(password, user.Password))
-            {
-                // cookie
-                var claims = new List<Claim>
-                    {
-                        new Claim(ClaimTypes.Name, user.Username),
-                        new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
-                        new Claim(ClaimTypes.Role, Enum.GetName(typeof(RoleEnum), user.Role)),
-                        new Claim("FullName", user.FullName),
-                    };
-
-                var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
-                var authProperties = new AuthenticationProperties
+            // cookie
+            var claims = new List<Claim>
                 {
-                    IsPersistent = true,
-                    ExpiresUtc = DateTimeOffset.UtcNow.AddDays(1)
+                    new Claim(ClaimTypes.Name, userDto.Username),
+                    new Claim(ClaimTypes.NameIdentifier, userDto.Id.ToString()),
+                    new Claim(ClaimTypes.Role, Enum.GetName(typeof(RoleEnum), userDto.Role)),
+                    new Claim("FullName", userDto.FullName),
                 };
 
-                await _httpContextAccessor.HttpContext!.SignInAsync(
-                    CookieAuthenticationDefaults.AuthenticationScheme,
-                    new ClaimsPrincipal(claimsIdentity),
-                    authProperties);
+            var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+            var authProperties = new AuthenticationProperties
+            {
+                IsPersistent = true,
+                ExpiresUtc = DateTimeOffset.UtcNow.AddDays(1)
+            };
 
-                // token
-                //return GenerateJwtToken(user.Id, username, user.Role);
-            }
+            await _httpContextAccessor.HttpContext!.SignInAsync(
+                CookieAuthenticationDefaults.AuthenticationScheme,
+                new ClaimsPrincipal(claimsIdentity),
+                authProperties);
+
+            // token
+            //return GenerateJwtToken(user.Id, username, user.Role);
         }
 
         public async Task SignOut()

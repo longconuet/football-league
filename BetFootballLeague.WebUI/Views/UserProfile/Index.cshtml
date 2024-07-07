@@ -1,0 +1,38 @@
+﻿@{
+    ViewData["Title"] = "Profile Page";
+}
+
+<div>
+    <h1>User Profile</h1>
+    <div class="row mb-3 mt-5">
+        <div class="mb-3">
+            <label for="name-edit" class="form-label">Name</label>
+            <input type="text" class="form-control" id="name-edit">
+        </div>
+        <div class="mb-3">
+            <label for="username-edit" class="form-label">Username</label>
+            <input type="text" class="form-control" id="username-edit" disabled>
+        </div>
+        <div class="mb-3">
+            <label for="phone-edit" class="form-label">Phone</label>
+            <input type="text" class="form-control" id="phone-edit">
+        </div>
+        <div class="mb-3">
+            <label for="email-edit" class="form-label">Email</label>
+            <input type="email" class="form-control" id="email-edit">
+        </div>
+        <div class="d-grid gap-2 d-md-block">
+            <button class="btn btn-success" type="button" onclick="submitUpdateUserProfile()">Update</button>
+            <button class="btn btn-primary" type="button" onclick="showChangePasswordModal()">Change password</button>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Update -->
+<partial name="_ModalChangePassword" />
+
+@Html.AntiForgeryToken()
+
+@section Scripts {
+    <script src="~/js/user-profile.js" asp-append-version="true"></script>
+}

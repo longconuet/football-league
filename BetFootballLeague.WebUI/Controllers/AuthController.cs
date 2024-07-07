@@ -2,13 +2,9 @@
 using BetFootballLeague.Application.DTOs;
 using BetFootballLeague.Application.Services;
 using BetFootballLeague.Shared.Enums;
+using BetFootballLeague.Shared.Helpers;
 using BetFootballLeague.WebUI.Models;
-using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc;
-using System.Security.Claims;
-using BetFootballLeague.Domain.Entities;
-using Newtonsoft.Json.Linq;
 
 namespace BetFootballLeague.WebUI.Controllers
 {
@@ -16,11 +12,13 @@ namespace BetFootballLeague.WebUI.Controllers
     {
         private readonly JwtSettings _jwtSettings;
         private readonly AuthService _authenticationService;
+        private readonly UserService _userService;
 
-        public AuthController(JwtSettings jwtSettings, AuthService authenticationService)
+        public AuthController(JwtSettings jwtSettings, AuthService authenticationService, UserService userService)
         {
             _jwtSettings = jwtSettings;
             _authenticationService = authenticationService;
+            _userService = userService;
         }
 
         [HttpGet]
@@ -34,7 +32,36 @@ namespace BetFootballLeague.WebUI.Controllers
         {
             try
             {
-                await _authenticationService.Authenticate(request.Username, request.Password);
+                var user = await _userService.GetUserByUsername(request.Username);
+                if (user == null)
+                {
+                    return Json(new ResponseModel<string>
+                    {
+                        Status = ResponseStatusEnum.FAILED,
+                        Message = "Account does not exist",
+                    });
+                }
+
+                if (user.Status == UserStatusEnum.Inactive)
+                {
+                    return Json(new ResponseModel<string>
+                    {
+                        Status = ResponseStatusEnum.FAILED,
+                        Message = "Account has been locked",
+                    });
+                }
+
+                if (!await _userService.VerifyPassword(request.Username, request.Password))
+                {
+
+                    return Json(new ResponseModel<string>
+                    {
+                        Status = ResponseStatusEnum.FAILED,
+                        Message = "Incorrect password",
+                    });
+                }
+
+                await _authenticationService.Authenticate(user);
 
                 return Json(new ResponseModel<string>
                 {

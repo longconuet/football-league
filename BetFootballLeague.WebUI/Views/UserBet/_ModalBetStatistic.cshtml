@@ -1,0 +1,53 @@
+﻿<div class="modal fade" id="bet-match-statistic-modal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="setBetMatchStatisticModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" style="max-width: 1400px;">
+        <div class="modal-content">
+            <input type="hidden" id="statistic-user-bet-id" value="" />
+            <div class="modal-header">
+                <h5 class="modal-title" id="setBetMatchModalLabel">Bet match statistic</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="mb-3">
+                    <div>
+                        <div class="col-md-12 mb-3">
+                            <span id="match-round-statistic"></span>
+                            <span id="match-datetime-statistic"></span>
+                            <span id="match-status-statistic"></span>
+                        </div>
+                        <div class="col-md-12 mb-3">
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div width="80%">
+                                        <canvas id="chart-statistic"></canvas>
+                                    </div>
+                                    <div id="not-bet-users-statistic"></div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div id="bet-team1-statistic">
+                                        <span><img src="" style="max-width: 50px; max-height: 50px;" alter="img" id="bet-team1-img-statistic"></span>
+                                        <span id="bet-team1-name-statistic"></span>
+                                        <span id="bet-team1-odds-statistic"></span>
+                                        <span id="bet-team1-score-statistic"></span>
+                                    </div>
+                                    <div id="bet-team1-users-statistic"></div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div id="bet-team2-statistic">
+                                        <span><img src="" style="max-width: 50px; max-height: 50px;" alter="img" id="bet-team2-img-statistic"></span>
+                                        <span id="bet-team2-name-statistic"></span>
+                                        <span id="bet-team2-odds-statistic"></span>
+                                        <span id="bet-team2-score-statistic"></span>
+                                    </div>
+                                    <div id="bet-team2-users-statistic"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>

@@ -24,35 +24,44 @@
                 </button>
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1">
-                        @* <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                        </li> *@
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="User" asp-action="Index">Users</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Group" asp-action="Index">Groups</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Round" asp-action="Index">Rounds</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Team" asp-action="Index">Teams</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Match" asp-action="Index">Matches</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="UserBet" asp-action="Index">User Bets</a>
-                        </li>
+                        @using System.Security.Claims
+                        @{
+                            var role = "";
+                            if (User.Identity.IsAuthenticated)
+                            {
+                                role = User.Claims.First(c => c.Type == ClaimTypes.Role).Value;
+                            }                            
+                        }
+                        @if (role == "ADMIN")
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="User" asp-action="Index">Users</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Group" asp-action="Index">Groups</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Round" asp-action="Index">Rounds</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Team" asp-action="Index">Teams</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Match" asp-action="Index">Matches</a>
+                            </li>
+                        }
+                        else if (role == "NORMAL_USER")
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="UserBet" asp-action="Index">User Bets</a>
+                            </li>
+                        }
                     </ul>
                     <div class="d-flex">
                         @if (User.Identity.IsAuthenticated)
                         {
-                            <span>Hello </span>
+                            var fullName = User.Claims.First(c => c.Type == "FullName")?.Value;
+                            <span class="mt-2">Hello <strong><a asp-controller="UserProfile" asp-action="Index">@fullName</a></strong></span>
                             <a href="javascript:void(0)" onclick="logout()" class="btn btn-outline-secondary ms-2">Logout</a>
                         }
                         else
@@ -85,6 +94,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
     <script src="https://unpkg.com/gijgo@1.9.14/js/gijgo.min.js" type="text/javascript"></script>
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>

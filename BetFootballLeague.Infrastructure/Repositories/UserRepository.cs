@@ -3,6 +3,7 @@ using BetFootballLeague.Domain.Repositories;
 using BetFootballLeague.Infrastructure.Data;
 using BetFootballLeague.Shared.Enums;
 using Microsoft.EntityFrameworkCore;
+using System.Linq.Expressions;
 
 namespace BetFootballLeague.Infrastructure.Repositories
 {
@@ -15,15 +16,20 @@ namespace BetFootballLeague.Infrastructure.Repositories
             _context = context;
         }
 
-        public async Task<List<User>> GetUsersAsync()
+        public async Task<List<User>> GetUsersAsync(Expression<Func<User, bool>>? filter = null, bool tracked = true)
         {
-            return await _context.Users.ToListAsync();
-        }
 
-        public async Task<List<User>> GetActiveNormalUsersAsync()
-        {
-            return await _context.Users.Where(x => x.Status == UserStatusEnum.Active && x.Role == RoleEnum.NORMAL_USER)
-                .ToListAsync();
+            IQueryable<User> query = _context.Users;
+            if (filter != null)
+            {
+                query = query.Where(filter);
+            }
+            if (!tracked)
+            {
+                query = query.AsNoTracking();
+            }
+
+            return await query.ToListAsync();
         }
 
         public async Task AddUserAsync(User user)
@@ -38,8 +44,12 @@ namespace BetFootballLeague.Infrastructure.Repositories
             await _context.SaveChangesAsync();
         }
 
-        public async Task<User?> GetUserByIdAsync(Guid id)
+        public async Task<User?> GetUserByIdAsync(Guid id, bool tracked = true)
         {
+            if (tracked)
+            {
+                return await _context.Users.FirstOrDefaultAsync(x => x.Id == id);
+            }
             return await _context.Users.AsNoTracking().FirstOrDefaultAsync(x => x.Id == id);
         }
 

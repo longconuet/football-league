@@ -3,7 +3,6 @@ using BetFootballLeague.Application.Services;
 using BetFootballLeague.Shared.Enums;
 using BetFootballLeague.WebUI.Models;
 using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -105,7 +104,7 @@ namespace BetFootballLeague.WebUI.Controllers
         {
             try
             {
-                UserDto? user = await _userService.GetUserById(id);
+                UserDto? user = await _userService.GetUserById(id, false);
                 if (user == null)
                 {
                     return Json(new ResponseModel<UserDto>

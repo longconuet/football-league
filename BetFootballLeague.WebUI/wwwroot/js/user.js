@@ -24,6 +24,7 @@ function getUserList() {
                 $.each(userData, function (index, user) {
                     tableHtml += '<tr>';
                     tableHtml += '<td>' + user.fullName + '</td>';
+                    tableHtml += '<td>' + user.username + '</td>';
                     tableHtml += '<td>' + user.phone + '</td>';
                     tableHtml += '<td>' + user.email + '</td>';
                     tableHtml += '<td>' + getRoleLabel(user.role) + '</td>';
@@ -44,7 +45,7 @@ function getUserList() {
                 });
             }
             else {
-                tableHtml = '<tr><td colspan="6" class="text-center">No data</td></tr>';
+                tableHtml = '<tr><td colspan="7" class="text-center">No data</td></tr>';
             }
 
             $('#user-table-data').html(tableHtml);

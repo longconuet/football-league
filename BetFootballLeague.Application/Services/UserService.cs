@@ -2,6 +2,7 @@
 using BetFootballLeague.Application.DTOs;
 using BetFootballLeague.Domain.Entities;
 using BetFootballLeague.Domain.Repositories;
+using BetFootballLeague.Shared.Enums;
 using BetFootballLeague.Shared.Helpers;
 using Microsoft.EntityFrameworkCore;
 
@@ -26,13 +27,19 @@ namespace BetFootballLeague.Application.Services
 
         public async Task<List<UserDto>> GetActiveNormalUsers()
         {
-            var users = await _userRepository.GetActiveNormalUsersAsync();
+            var users = await _userRepository.GetUsersAsync(x => x.Status == UserStatusEnum.Active && x.Role == RoleEnum.NORMAL_USER);
             return _mapper.Map<List<UserDto>>(users);
         }
 
-        public async Task<UserDto?> GetUserById(Guid id)
+        public async Task<List<UserDto>> GetAllNormalUsers()
         {
-            var user = await _userRepository.GetUserByIdAsync(id);
+            var users = await _userRepository.GetUsersAsync(x => x.Role == RoleEnum.NORMAL_USER);
+            return _mapper.Map<List<UserDto>>(users);
+        }
+
+        public async Task<UserDto?> GetUserById(Guid id, bool tracked = true)
+        {
+            var user = await _userRepository.GetUserByIdAsync(id, tracked);
             return user != null ? _mapper.Map<UserDto>(user) : null;
         }
 
@@ -76,6 +83,16 @@ namespace BetFootballLeague.Application.Services
                 return _mapper.Map<UserDto>(user);
             }
             return null;
+        }
+
+        public async Task<bool> VerifyPassword(string username, string password)
+        {
+            var user = await _userRepository.GetUserByUsernameAsync(username);
+            if (user != null && PasswordHelper.VerifyPassword(password, user.Password))
+            {
+                return true;
+            }
+            return false;
         }
 
         public async Task AddUser(CreateUserRequestDto userDto)

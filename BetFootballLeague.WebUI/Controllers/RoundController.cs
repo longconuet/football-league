@@ -2,10 +2,13 @@
 using BetFootballLeague.Application.Services;
 using BetFootballLeague.Shared.Enums;
 using BetFootballLeague.WebUI.Models;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BetFootballLeague.WebUI.Controllers
 {
+    [Authorize(AuthenticationSchemes = CookieAuthenticationDefaults.AuthenticationScheme, Policy = "Admin")]
     public class RoundController : Controller
     {
         private readonly RoundService _roundService;

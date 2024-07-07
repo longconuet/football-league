@@ -51,3 +51,7 @@ footer {
     bottom: 0;
     width: 100%;
 }
+
+.sm-text {
+    font-size: 12px;
+}

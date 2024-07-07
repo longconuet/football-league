@@ -3,13 +3,13 @@ using BetFootballLeague.Application.Services;
 using BetFootballLeague.Shared.Enums;
 using BetFootballLeague.WebUI.Models;
 using Microsoft.AspNetCore.Mvc;
-using System.IO;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
 using BetFootballLeague.WebUI.Helpers;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authorization;
 
 namespace BetFootballLeague.WebUI.Controllers
 {
+    [Authorize(AuthenticationSchemes = CookieAuthenticationDefaults.AuthenticationScheme, Policy = "Admin")]
     public class TeamController : Controller
     {
         private readonly TeamService _teamService;

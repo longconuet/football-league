@@ -2,11 +2,14 @@
 using BetFootballLeague.Application.Services;
 using BetFootballLeague.Shared.Enums;
 using BetFootballLeague.WebUI.Models;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Globalization;
 
 namespace BetFootballLeague.WebUI.Controllers
 {
+    [Authorize(AuthenticationSchemes = CookieAuthenticationDefaults.AuthenticationScheme, Policy = "Admin")]
     public class MatchController : Controller
     {
         private readonly MatchService _matchService;

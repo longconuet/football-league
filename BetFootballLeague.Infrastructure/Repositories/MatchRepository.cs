@@ -40,6 +40,7 @@ namespace BetFootballLeague.Infrastructure.Repositories
             return await _context.Matches
                 .Include(x => x.Team1)
                 .Include(x => x.Team2)
+                .Include(x => x.Round)
                 .AsNoTracking()
                 .FirstOrDefaultAsync(x => x.Id == id);
         }
