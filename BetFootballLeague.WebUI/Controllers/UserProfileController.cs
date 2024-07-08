@@ -1,6 +1,7 @@
 ﻿using BetFootballLeague.Application.DTOs;
 using BetFootballLeague.Application.Services;
 using BetFootballLeague.Shared.Enums;
+using BetFootballLeague.Shared.Helpers;
 using BetFootballLeague.WebUI.Models;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
@@ -8,7 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace BetFootballLeague.WebUI.Controllers
 {
-    [Authorize(AuthenticationSchemes = CookieAuthenticationDefaults.AuthenticationScheme, Policy = "User")]
+    [Authorize(AuthenticationSchemes = CookieAuthenticationDefaults.AuthenticationScheme)]
     public class UserProfileController : Controller
     {
         private readonly UserService _userService;
@@ -61,7 +62,7 @@ namespace BetFootballLeague.WebUI.Controllers
             try
             {
                 Guid currentUserId = Guid.Parse(HttpContext.Items["UserId"].ToString());
-                UserDto? user = await _userService.GetUserById(currentUserId);
+                UserDto? user = await _userService.GetUserById(currentUserId, false);
                 if (user == null)
                 {
                     return Json(new ResponseModel<UserDto>
@@ -108,6 +109,43 @@ namespace BetFootballLeague.WebUI.Controllers
                 {
                     Status = ResponseStatusEnum.SUCCEED,
                     Message = "Update user successfully"
+                });
+            }
+            catch (Exception ex)
+            {
+                return Json(new ResponseModel
+                {
+                    Status = ResponseStatusEnum.FAILED,
+                    Message = ex.Message,
+                });
+            }
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> ChangePasswordAjax([FromBody] ChangePasswordProfileRequestDto request)
+        {
+            try
+            {
+                Guid currentUserId = Guid.Parse(HttpContext.Items["UserId"].ToString());
+                UserDto? user = await _userService.GetUserById(currentUserId, false);
+                if (user == null)
+                {
+                    return Json(new ResponseModel<UserDto>
+                    {
+                        Status = ResponseStatusEnum.FAILED,
+                        Message = "User not found"
+                    });
+                }
+
+                user.Password = PasswordHelper.HashPasword(request.Password);
+                user.UpdatedBy = currentUserId;
+                user.UpdatedAt = DateTime.Now;
+                await _userService.UpdateUser(user);
+
+                return Json(new ResponseModel
+                {
+                    Status = ResponseStatusEnum.SUCCEED,
+                    Message = "Change password successfully"
                 });
             }
             catch (Exception ex)

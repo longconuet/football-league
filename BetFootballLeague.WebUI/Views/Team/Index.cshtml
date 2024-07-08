@@ -31,101 +31,13 @@
 </div>
 
 <!-- Modal Create -->
-<div class="modal fade" id="create-team-modal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="createTeamModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="createTeamModalLabel">Add team</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <div class="mb-3">
-                    <label for="image" class="form-label">Image</label>
-                    <input type="file" class="form-control" onchange="showSelectedImage(this)" id="image">
-                </div>
-                <div id="selected-image-div">
-                    <div>
-                        <img id="selected-image" style="max-width: 200px; max-height: 200px;" />
-                    </div>
-                </div>
-                <div class="mb-3">
-                    <label for="name" class="form-label">Name</label>
-                    <input type="text" class="form-control" id="name">
-                </div>
-                <div class="mb-3">
-                    <label for="group-id" class="form-label">Group</label>
-                    <select class="form-select" aria-label="selectGroup" id="group-id">
-                        <option value="" selected>Select Group</option>
-                    </select>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary" onclick="submitCreateTeam()">Save</button>
-            </div>
-        </div>
-    </div>
-</div>
+<partial name="_ModalCreate" />
 
 <!-- Modal Edit -->
-<div class="modal fade" id="edit-team-modal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="editTeamModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <input type="hidden" id="update-team-id" value="" />
-            <div class="modal-header">
-                <h5 class="modal-title" id="editTeamModalLabel">Update team</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <div class="mb-3">
-                    <label for="image" class="form-label">Image</label>
-                    <input type="file" class="form-control" onchange="showSelectedImage(this, '-edit')" id="image-edit">
-                </div>
-                <div id="selected-image-div-edit">
-                    <div>
-                        <img id="selected-image-edit" style="max-width: 200px; max-height: 200px;" />
-                    </div>
-                </div>
-                <div class="mb-3">
-                    <label for="name-edit" class="form-label">Name</label>
-                    <input type="text" class="form-control" id="name-edit">
-                </div>
-                <div class="mb-3">
-                    <label for="group-id-edit" class="form-label">Group</label>
-                    <select class="form-select" aria-label="selectGroup" id="group-id-edit">
-                        <option value="" selected>Select Group</option>
-                    </select>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary" onclick="submitUpdateTeam()">Update</button>
-            </div>
-        </div>
-    </div>
-</div>
+<partial name="_ModalUpdate" />
 
 <!-- Modal Delete -->
-<div class="modal fade" id="delete-team-modal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="deleteTeamModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <input type="hidden" id="delete-team-id" value="" />
-            <div class="modal-header">
-                <h5 class="modal-title" id="deleteTeamModalLabel">Delete team</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <div class="mb-3">
-                    Are you sure you want to delete this team?
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-danger" onclick="submitDeleteTeam()">Delete</button>
-            </div>
-        </div>
-    </div>
-</div>
+<partial name="_ModalDelete" />
 
 @Html.AntiForgeryToken()
 

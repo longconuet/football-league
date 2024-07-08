@@ -1,0 +1,32 @@
+﻿<div class="modal fade" id="create-round-modal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="createRoundModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="createRoundModalLabel">Add round</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="mb-3">
+                    <label for="index" class="form-label">Index</label>
+                    <input type="number" min="1" max="10" class="form-control" id="index">
+                </div>
+                <div class="mb-3">
+                    <label for="name" class="form-label">Name</label>
+                    <input type="text" class="form-control" id="name">
+                </div>
+                <div class="mb-3">
+                    <label for="code" class="form-label">Code</label>
+                    <input type="text" class="form-control" id="code">
+                </div>
+                <div class="mb-3">
+                    <label for="bet-point" class="form-label">Bet Point</label>
+                    <input type="number" min="1" max="1000" class="form-control" id="bet-point">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" onclick="submitCreateRound()">Save</button>
+            </div>
+        </div>
+    </div>
+</div>

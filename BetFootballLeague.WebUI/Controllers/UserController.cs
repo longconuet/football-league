@@ -135,7 +135,7 @@ namespace BetFootballLeague.WebUI.Controllers
         {
             try
             {
-                UserDto? user = await _userService.GetUserById(request.Id);
+                UserDto? user = await _userService.GetUserById(request.Id, false);
                 if (user == null)
                 {
                     return Json(new ResponseModel<UserDto>

@@ -1,10 +1,10 @@
 $(document).ready(function () {
-    getUserInfoModal();
+    getUserInfo();
 });
 
 var token = $('input[name="__RequestVerificationToken"]').val();
 
-function getUserInfoModal() {
+function getUserInfo() {
     $.ajax({
         type: "GET",
         url: '/UserProfile/GetCurrentUserInfoAjax',
@@ -53,8 +53,7 @@ function submitUpdateUserProfile() {
             }
 
             toastr.success(response.message, 'Success');
-            getUserList();
-            $('#edit-user-modal').modal('hide');
+            getUserInfo();
         },
         error: function (error) {
             toastr.error(error, 'Error')
@@ -68,15 +67,18 @@ function showChangePasswordModal() {
 }
 
 function submitChangePassword() {
+    let newPassword = $('#new-password').val();
+    if (newPassword == null || newPassword == '') {
+        toastr.error('Please enter new password', 'Error');
+        return;
+    }
+
     var data = {
-        Id: $('#update-user-id').val(),
-        FullName: $('#name-edit').val(),
-        Phone: $('#phone-edit').val(),
-        Email: $('#email-edit').val()
+        Password: newPassword
     };
 
     $.ajax({
-        url: '/User/UpdateUserAjax',
+        url: '/UserProfile/ChangePasswordAjax',
         data: JSON.stringify(data),
         type: "POST",
         contentType: "application/json;charset=utf-8",
@@ -91,8 +93,7 @@ function submitChangePassword() {
             }
 
             toastr.success(response.message, 'Success');
-            getUserList();
-            $('#edit-user-modal').modal('hide');
+            $('#change-password-modal').modal('hide');
         },
         error: function (error) {
             toastr.error(error, 'Error')

@@ -1,0 +1,20 @@
+﻿<div class="modal fade" id="delete-team-modal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="deleteTeamModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <input type="hidden" id="delete-team-id" value="" />
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteTeamModalLabel">Delete team</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="mb-3">
+                    Are you sure you want to delete this team?
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-danger" onclick="submitDeleteTeam()">Delete</button>
+            </div>
+        </div>
+    </div>
+</div>
