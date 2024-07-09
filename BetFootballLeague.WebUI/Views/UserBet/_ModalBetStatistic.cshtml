@@ -9,10 +9,12 @@
             <div class="modal-body">
                 <div class="mb-3">
                     <div>
-                        <div class="col-md-12 mb-3">
-                            <span id="match-round-statistic"></span>
-                            <span id="match-datetime-statistic"></span>
-                            <span id="match-status-statistic"></span>
+                        <div class="col-md-12 mb-4">
+                            <div class="d-flex justify-content-between">
+                                <div id="match-round-statistic"></div>
+                                <div id="match-datetime-statistic"></div>
+                                <div id="match-status-statistic"></div>
+                            </div>
                         </div>
                         <div class="col-md-12 mb-3">
                             <div class="row">
@@ -20,25 +22,32 @@
                                     <div width="80%">
                                         <canvas id="chart-statistic"></canvas>
                                     </div>
-                                    <div id="not-bet-users-statistic"></div>
+                                    <div id="not-bet-users-statistic" class="mt-4 no-team-bet-user-list"></div>
                                 </div>
                                 <div class="col-md-4">
-                                    <div id="bet-team1-statistic">
-                                        <span><img src="" style="max-width: 50px; max-height: 50px;" alter="img" id="bet-team1-img-statistic"></span>
-                                        <span id="bet-team1-name-statistic"></span>
-                                        <span id="bet-team1-odds-statistic"></span>
-                                        <span id="bet-team1-score-statistic"></span>
+                                    <div class="team-bet-user-list">
+                                        <div id="bet-team1-statistic" class="mb-3">
+                                            <span><img src="" style="max-width: 70px; max-height: 70px;" alter="img" id="bet-team1-img-statistic"></span>
+                                            <span id="bet-team1-name-statistic" class="team-name"></span>
+                                            <span id="bet-team1-odds-statistic" class="ms-3" title="Odds"></span>
+                                            <span id="bet-team1-score-statistic" class="sm-score-item" title="Score">?</span>
+                                        </div>
+                                        <hr />
+                                        <div id="bet-team1-users-statistic"></div>
                                     </div>
-                                    <div id="bet-team1-users-statistic"></div>
+                                    
                                 </div>
                                 <div class="col-md-4">
-                                    <div id="bet-team2-statistic">
-                                        <span><img src="" style="max-width: 50px; max-height: 50px;" alter="img" id="bet-team2-img-statistic"></span>
-                                        <span id="bet-team2-name-statistic"></span>
-                                        <span id="bet-team2-odds-statistic"></span>
-                                        <span id="bet-team2-score-statistic"></span>
+                                    <div class="team-bet-user-list">
+                                        <div id="bet-team2-statistic" class="mb-3">
+                                            <span><img src="" style="max-width: 70px; max-height: 70px;" alter="img" id="bet-team2-img-statistic"></span>
+                                            <span id="bet-team2-name-statistic" class="team-name"></span>
+                                            <span id="bet-team2-odds-statistic" class="ms-3" title="Odds"></span>
+                                            <span id="bet-team2-score-statistic" class="sm-score-item" title="Score">?</span>
+                                        </div>
+                                        <hr />
+                                        <div id="bet-team2-users-statistic"></div>
                                     </div>
-                                    <div id="bet-team2-users-statistic"></div>
                                 </div>
                             </div>
                         </div>

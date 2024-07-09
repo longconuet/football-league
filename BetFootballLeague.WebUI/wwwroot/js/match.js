@@ -383,6 +383,8 @@ function submitDeleteMatch() {
 }
 
 function showSetOddsModal(id) {
+    clearSetOddsModalInput();
+
     $.ajax({
         type: "GET",
         url: '/Match/GetMatchInfoAjax/' + id,
@@ -566,6 +568,8 @@ function submitUpdateStatusMatch() {
 }
 
 function showUpdateScoreModal(id) {
+    clearUpdateScoreModalInput();
+
     $.ajax({
         type: "GET",
         url: '/Match/GetMatchInfoAjax/' + id,
@@ -642,4 +646,13 @@ function clearCreateModalInput() {
     $('#time').val('');
     $('#team1').val(null).trigger('change');
     $('#team2').val(null).trigger('change');
+}
+
+function clearUpdateScoreModalInput() {
+    $('#score-team1').val('');
+    $('#score-team2').val('');
+}
+
+function clearSetOddsModalInput() {
+    $('#odds').val('');
 }

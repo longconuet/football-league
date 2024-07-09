@@ -1,7 +1,7 @@
 .match-area {
     margin: 10px 0px;
     padding: 10px;
-    background: #d6d8d9;
+    background: #e3e3e3;
     border-radius: 10px;
     text-align: center;
 }
@@ -44,4 +44,68 @@
     width: 50px;
     height: 50px;
     border-radius: 50%;
+}
+
+.score-item {
+    color: #fff;
+    background: #0066ff;
+    border-radius: 5px;
+    padding: 6px 15px;
+    margin: 10px;
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.sm-score-item {
+    color: #fff;
+    background: #0066ff;
+    border-radius: 5px;
+    padding: 4px 10px;
+    margin: 5px;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.no-score-item {
+    color: #000000;
+    background: #fff;
+    border-radius: 5px;
+    padding: 6px 15px;
+    margin: 10px;
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.team-name {
+    font-size: 16px;
+    font-weight: bold;
+    color: #3c39f5;
+}
+
+.team-badge {
+    border-radius: 10px;
+    padding: 20px;
+}
+
+.user-win-bet {
+    border: #4fdd8e 1px solid;
+}
+
+.user-lose-bet {
+    border: #f34141 1px solid;
+}
+
+.user-team-bet {
+    border: #21d5fd 1px solid;
+}
+
+.team-bet-user-list {
+    border-radius: 5px;
+    background: #cfe8fd;
+    padding: 15px;
+}
+.no-team-bet-user-list {
+    border-radius: 5px;
+    background: #d0d2d3;
+    padding: 15px;
 }
