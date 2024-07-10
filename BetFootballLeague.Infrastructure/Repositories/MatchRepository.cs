@@ -28,12 +28,12 @@ namespace BetFootballLeague.Infrastructure.Repositories
             }
             if (include)
             {
-                query.Include(x => x.Team1)
+                query = query.Include(x => x.Team1)
                     .Include(x => x.Team2)
                     .Include(x => x.Round);
             }
 
-            return await query.OrderBy(x => x.IndexOrder).ToListAsync();
+            return await query.Include(x => x.Round).OrderBy(x => x.IndexOrder).ToListAsync();
         }
 
         public async Task<LeagueMatch?> GetMatchByIdAsync(Guid id)

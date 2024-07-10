@@ -83,7 +83,12 @@ function getUserBetList() {
                     divHtml += `<span class="me-2 float-start">Match ${item.indexOrder}</span>`;
                     divHtml += `</div>`;
                     divHtml += `<div class="col-4"><h6>${item.dateTime}</h6></div>`;
-                    divHtml += `<div class="col-4"><span class="float-end">` + getMatchStatusLabel(item.betStatus) + `</span></div>`;
+                    divHtml += `<div class="col-4">`;
+                    divHtml += `<span class="float-end">` + getMatchStatusLabel(item.betStatus) + `</span>`;
+                    if (item.betStatus == 1 && item.isLockedBet == true) {
+                        divHtml += `<span class="float-end"><span class="badge bg-danger">Bet locked</span></span>`;
+                    }
+                    divHtml += `</div>`;
                     divHtml += `</div>`;
                     divHtml += `</div>`;                    
 
