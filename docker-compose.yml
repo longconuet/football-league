@@ -1,0 +1,29 @@
+version: '3.8'
+
+services:
+  betfootballleague.webui:
+    image: ${DOCKER_REGISTRY-}betfootballleaguewebui
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "5001:80"
+    depends_on:
+      - sqlserver
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ConnectionStrings__DefaultConnection=Server=sqlserver;Database=Bet_Football_League;User Id=sa;Password=YourPassword123;
+
+  sqlserver:
+    image: mcr.microsoft.com/mssql/server:2019-latest
+    environment:
+      SA_PASSWORD: "YourPassword123"
+      ACCEPT_EULA: "Y"
+    restart: always
+    ports:
+      - "1434:1433"
+    volumes:
+      - sqlserverdata:/var/opt/mssql
+ 
+volumes:
+  sqlserverdata:

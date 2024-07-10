@@ -15,7 +15,7 @@ namespace BetFootballLeague.Infrastructure.Repositories
             _context = context;
         }
 
-        public async Task<List<LeagueMatch>> GetMatchesAsync(Expression<Func<LeagueMatch, bool>>? filter = null, bool tracked = true)
+        public async Task<List<LeagueMatch>> GetMatchesAsync(Expression<Func<LeagueMatch, bool>>? filter = null, bool tracked = true, bool include = true)
         {
             IQueryable<LeagueMatch> query = _context.Matches;
             if (filter != null)
@@ -26,13 +26,14 @@ namespace BetFootballLeague.Infrastructure.Repositories
             {
                 query = query.AsNoTracking();
             }
+            if (include)
+            {
+                query.Include(x => x.Team1)
+                    .Include(x => x.Team2)
+                    .Include(x => x.Round);
+            }
 
-            return await query
-                .Include(x => x.Team1)
-                .Include(x => x.Team2)
-                .Include(x => x.Round)
-                .OrderBy(x => x.IndexOrder)
-                .ToListAsync();
+            return await query.OrderBy(x => x.IndexOrder).ToListAsync();
         }
 
         public async Task<LeagueMatch?> GetMatchByIdAsync(Guid id)
@@ -61,6 +62,12 @@ namespace BetFootballLeague.Infrastructure.Repositories
         public async Task UpdateMatchAsync(LeagueMatch match)
         {
             _context.Matches.Update(match);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task UpdateMatchListAsync(List<LeagueMatch> matches)
+        {
+            _context.Matches.UpdateRange(matches);
             await _context.SaveChangesAsync();
         }
 

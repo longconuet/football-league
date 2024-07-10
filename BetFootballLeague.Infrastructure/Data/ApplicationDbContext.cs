@@ -21,6 +21,7 @@ namespace BetFootballLeague.Infrastructure.Data
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             optionsBuilder.UseSqlServer(@"Server=(localdb)\MSSQLLocalDB;Database=Bet_Football_League;TrustServerCertificate=True;Trusted_Connection=True;");
+            //optionsBuilder.UseSqlServer(@"Server=sqlserver;Database=Bet_Football_League;User Id=sa;Password=Password@123;");
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

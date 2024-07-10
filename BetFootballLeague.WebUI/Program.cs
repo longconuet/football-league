@@ -1,10 +1,13 @@
 using BetFootballLeague.Application;
 using BetFootballLeague.Application.Middlewares;
+using BetFootballLeague.Application.ScheduledJobs;
 using BetFootballLeague.Application.Services;
 using BetFootballLeague.Domain.Repositories;
 using BetFootballLeague.Infrastructure.Data;
 using BetFootballLeague.Infrastructure.Repositories;
 using BetFootballLeague.Shared.Enums;
+using Hangfire;
+using Hangfire.MemoryStorage;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Mvc;
@@ -49,45 +52,6 @@ var jwtSettings = new JwtSettings();
 new ConfigurationBuilder().AddJsonFile("appsettings.json").Build().GetSection("JwtSettings").Bind(jwtSettings);
 builder.Services.AddSingleton(jwtSettings);
 
-// add Authentication and JwtBearer
-//builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-//    .AddJwtBearer(options =>
-//    {
-//        options.TokenValidationParameters = new TokenValidationParameters
-//        {
-//            ValidateIssuer = true,
-//            ValidateAudience = true,
-//            ValidateLifetime = true,
-//            ValidateIssuerSigningKey = true,
-//            ValidIssuer = jwtSettings.Issuer,
-//            ValidAudience = jwtSettings.Audience,
-//            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings.Key)),
-//            ClockSkew = TimeSpan.Zero
-//        };
-//    });
-
-//builder.Services
-//    .AddAuthentication(x =>
-//    {
-//        x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-//        x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-//    })
-//    .AddJwtBearer(x =>
-//    {
-//        x.RequireHttpsMetadata = false;
-//        x.SaveToken = true;
-//        x.TokenValidationParameters = new TokenValidationParameters
-//        {
-//            ValidateIssuer = false,
-//            ValidateAudience = false,
-//            ValidateIssuerSigningKey = true,
-//            ValidIssuer = jwtSettings.Issuer,
-//            ValidAudience = jwtSettings.Audience,
-//            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings.Key)),
-//            ClockSkew = TimeSpan.Zero
-//        };
-//    });
-
 
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
     .AddCookie(options =>
@@ -107,6 +71,10 @@ builder.Services.AddAuthorization(options =>
 
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddSingleton<TokenBlacklistService>();
+
+// Hangfire
+builder.Services.AddHangfire(config => config.UseMemoryStorage());
+builder.Services.AddHangfireServer();
 
 var app = builder.Build();
 
@@ -128,6 +96,12 @@ app.UseAuthorization();
 
 app.UseMiddleware<UserInfoMiddleware>();
 app.UseMiddleware<BlacklistMiddleware>();
+
+app.UseHangfireDashboard();
+app.UseHangfireServer();
+
+RecurringJob.AddOrUpdate<UpdateMatchBetStatusJob>(job => job.Execute(), "*/30 * * * *"); // every 30 minutes
+
 
 app.MapControllerRoute(
     name: "default",
