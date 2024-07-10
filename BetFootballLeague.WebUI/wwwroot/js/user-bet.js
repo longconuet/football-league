@@ -228,7 +228,7 @@ function getUserBetList() {
                     }
                     divHtml += `</div>`;
                     divHtml += `<div class="col-6 d-flex justify-content-end">`;
-                    if (item.betStatus == 1) { // opening
+                    if (item.betStatus == 1 && !item.isLockedBet) { // opening
                         divHtml += `<button type="button" class="btn btn-success ms-2" onclick="showBetModal('${item.id}')">Bet</button>`;
                     }
                     if (item.betStatus == 2 && item.userBet) { // ended

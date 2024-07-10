@@ -178,7 +178,12 @@ function getMatchList() {
                         tableHtml += '<div class="text-center">?</div>';
                     }
                     tableHtml += '</td>';
+
+                    // status
                     tableHtml += '<td>' + getStatusLabel(match.betStatus) + '</td>';
+
+                    // open bet
+                    tableHtml += '<td>' + getOpenBetStatusLabel(match.isLockedBet) + '</td>';
 
                     // score
                     tableHtml += '<td class="text-center">';
@@ -199,11 +204,22 @@ function getMatchList() {
                         updateScoreBtnHtml = `<button type="button" class="btn btn-success m-1" onClick="showUpdateScoreModal('${match.id}')" title="Update score"><i class="bi bi-caret-right-square"></i></button>`;
                     }
 
+                    // open/lock bet button
+                    let openLockBetBtnHtml = '';
+                    if (match.betStatus == 1) { // opening
+                        if (match.isLockedBet) {
+                            openLockBetBtnHtml = `<button type="button" class="btn btn-success m-1" onClick="showOpenLockBetModal('${match.id}', 0)" title="Open bet"><i class="bi bi-unlock-fill"></i></button>`;
+                        }
+                        else {
+                            openLockBetBtnHtml = `<button type="button" class="btn btn-danger m-1" onClick="showOpenLockBetModal('${match.id}', 1)" title="Lock bet"><i class="bi bi-lock-fill"></i></button>`;
+                        }
+                    }
+
                     let updateStatusBtnHtml = `<button type="button" class="btn btn-primary m-1" onClick="showUpdateStatusModal('${match.id}')" title="Update status"><i class="bi bi-arrow-left-right"></i></button>`;
                     let editBtnHtml = `<button type="button" class="btn btn-primary m-1" onClick="showEditModal('${match.id}')" title="Edit"><i class="bi bi-pencil-fill"></i></button>`;
                     let deleteBtnHtml = `<button type="button" class="btn btn-danger" onClick="showDeleteModal('${match.id}')" title="Delete"><i class="bi bi-trash-fill"></i></button>`;
 
-                    tableHtml += '<td>' + setOddsBtnHtml + updateScoreBtnHtml + updateStatusBtnHtml + editBtnHtml + deleteBtnHtml + '</td>';
+                    tableHtml += '<td>' + setOddsBtnHtml + updateScoreBtnHtml + updateStatusBtnHtml + openLockBetBtnHtml + editBtnHtml + deleteBtnHtml + '</td>';
                     tableHtml += '</tr>';
                 });
             }
@@ -234,6 +250,10 @@ function getStatusLabel(status) {
     }
 
     return label;
+}
+
+function getOpenBetStatusLabel(isLockedBet) {
+    return isLockedBet ? '<span class="badge bg-danger">Locked</span>' : '<span class="badge bg-success">Opened</span>';
 }
 
 function showCreateModal() {
@@ -632,6 +652,52 @@ function submitUpdateScoreMatch() {
             toastr.success(response.message, 'Success');
             getMatchList();
             $('#update-score-match-modal').modal('hide');
+        },
+        error: function (error) {
+            toastr.error(error, 'Error')
+        }
+    });
+}
+
+function showOpenLockBetModal(matchId, isLockedBet) {
+    $('#open-lock-bet-match-id').val(matchId);
+    $('#open-lock-bet-is-locked').val(isLockedBet);
+
+    if (isLockedBet == 0) {
+        $('#open-lock-bet-confirm').html('<span class="text-success">OPEN<span/>');
+        $('#OpenLockBetMatchModalLabel').html('Open Match Bet');
+    }
+    else {
+        $('#open-lock-bet-confirm').html('<span class="text-danger">LOCK<span/>');
+        $('#OpenLockBetMatchModalLabel').html('Lock Match Bet');
+    }
+    $('#open-lock-bet-match-modal').modal('show');
+}
+
+function submitOpenLockBet() {
+    var data = {
+        MatchId: $('#open-lock-bet-match-id').val(),
+        IsLocked: $('#open-lock-bet-is-locked').val()
+    };
+
+    $.ajax({
+        url: '/Match/UpdateIsLockedStatusAjax',
+        data: JSON.stringify(data),
+        type: "POST",
+        contentType: "application/json;charset=utf-8",
+        dataType: "json",
+        headers: {
+            'RequestVerificationToken': token
+        },
+        success: function (response) {
+            if (response.status == 0) {
+                toastr.error(response.message, 'Error');
+                return;
+            }
+
+            toastr.success(response.message, 'Success');
+            getMatchList();
+            $('#open-lock-bet-match-modal').modal('hide');
         },
         error: function (error) {
             toastr.error(error, 'Error')

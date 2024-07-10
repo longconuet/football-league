@@ -1,14 +1,11 @@
 ﻿using AutoMapper;
 using BetFootballLeague.Application.DTOs;
 using BetFootballLeague.Application.Services;
-using BetFootballLeague.Domain.Entities;
 using BetFootballLeague.Shared.Enums;
 using BetFootballLeague.WebUI.Models;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.FileSystemGlobbing;
-using System.Text.RegularExpressions;
 
 namespace BetFootballLeague.WebUI.Controllers
 {
@@ -129,7 +126,7 @@ namespace BetFootballLeague.WebUI.Controllers
                     });
                 }
 
-                if (match.BetStatus != MatchBetStatusEnum.OPENING)
+                if (match.BetStatus != MatchBetStatusEnum.OPENING || match.IsLockedBet)
                 {
                     return Json(new ResponseModel<MatchBetDto>
                     {

@@ -25,8 +25,9 @@
                     <th scope="col">Round</th>
                     <th scope="col">Team 1</th>
                     <th scope="col">Team 2</th>
-                    <th scope="col">Score</th>
                     <th scope="col">Status</th>
+                    <th scope="col">Open Bet</th>
+                    <th scope="col">Score</th>
                     <th scope="col" class="text-center">Action</th>
                 </tr>
             </thead>
@@ -56,6 +57,9 @@
 
 <!-- Modal Update Score -->
 <partial name="_ModalUpdateScore" />
+
+<!-- Modal Open/Lock Bet -->
+<partial name="_ModalOpenLockBet" />
 
 
 @Html.AntiForgeryToken()

@@ -18,6 +18,7 @@ namespace BetFootballLeague.Domain.Entities
         public int? Team2Score { get; set; }
         public Guid? WinBetTeamId { get; set; }
         public MatchBetStatusEnum BetStatus { get; set; } = MatchBetStatusEnum.NOT_ALLOWED;
+        public bool IsLockedBet { get; set; } = true;
 
         public Round Round { get; set; }
         public Team Team1 { get; set; }

@@ -5,7 +5,6 @@ using BetFootballLeague.WebUI.Models;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Globalization;
 
 namespace BetFootballLeague.WebUI.Controllers
 {
@@ -342,6 +341,7 @@ namespace BetFootballLeague.WebUI.Controllers
                 bool invalidCondition1 = (newStatus == MatchBetStatusEnum.OPENING || newStatus == MatchBetStatusEnum.IS_CLOSED)
                     && (match.Team1Id == null || match.Team2Id == null || match.Odds == null);
                 bool invalidCondition2 = newStatus == MatchBetStatusEnum.NOT_ALLOWED && (oldStatus == MatchBetStatusEnum.OPENING || oldStatus == MatchBetStatusEnum.IS_CLOSED);
+                bool invalidCondition3 = newStatus == MatchBetStatusEnum.OPENING && oldStatus == MatchBetStatusEnum.IS_CLOSED;
                 if (invalidCondition1 || invalidCondition2)
                 {
                     return Json(new ResponseModel<MatchDto>
@@ -378,6 +378,16 @@ namespace BetFootballLeague.WebUI.Controllers
                 if (oldStatus == MatchBetStatusEnum.IS_CLOSED && newStatus == MatchBetStatusEnum.OPENING)
                 {
                     match.WinBetTeamId = null;
+                }
+
+                // update isLocked status
+                if (oldStatus == MatchBetStatusEnum.NOT_ALLOWED && newStatus == MatchBetStatusEnum.OPENING)
+                {
+                    match.IsLockedBet = false;
+                }
+                else if (oldStatus == MatchBetStatusEnum.OPENING && newStatus == MatchBetStatusEnum.IS_CLOSED)
+                {
+                    match.IsLockedBet = true;
                 }
 
                 match.BetStatus = newStatus;
@@ -441,6 +451,49 @@ namespace BetFootballLeague.WebUI.Controllers
                 {
                     Status = ResponseStatusEnum.SUCCEED,
                     Message = "Update score successfully"
+                });
+            }
+            catch (Exception ex)
+            {
+                return Json(new ResponseModel
+                {
+                    Status = ResponseStatusEnum.FAILED,
+                    Message = ex.Message,
+                });
+            }
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> UpdateIsLockedStatusAjax([FromBody] UpdateIsLockedStatusRequestDto request)
+        {
+            try
+            {
+                MatchDto? match = await _matchService.GetMatchById(request.MatchId);
+                if (match == null)
+                {
+                    return Json(new ResponseModel<MatchDto>
+                    {
+                        Status = ResponseStatusEnum.FAILED,
+                        Message = "Match not found"
+                    });
+                }
+
+                if (match.BetStatus != MatchBetStatusEnum.OPENING)
+                {
+                    return Json(new ResponseModel<MatchDto>
+                    {
+                        Status = ResponseStatusEnum.FAILED,
+                        Message = "Can not change locked bet status"
+                    });
+                }
+
+                match.IsLockedBet = request.IsLocked == 1 ? true : false;
+                await _matchService.UpdateMatch(match);
+
+                return Json(new ResponseModel
+                {
+                    Status = ResponseStatusEnum.SUCCEED,
+                    Message = "Update bet status successfully"
                 });
             }
             catch (Exception ex)

@@ -18,6 +18,7 @@ namespace BetFootballLeague.Application.DTOs
         public int? Team2Score { get; set; }
         public Guid? WinBetTeamId { get; set; }
         public MatchBetStatusEnum BetStatus { get; set; }
+        public bool IsLockedBet { get; set; }
 
         public RoundDto Round { get; set; }
         public TeamDto Team1 { get; set; }
